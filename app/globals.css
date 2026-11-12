@@ -1,0 +1,181 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/*
+ * The site is always light cream. `dark:` utilities only apply under a `.dark`
+ * ancestor, which is never set, so they are inert.
+ */
+@custom-variant dark (&:is(.dark *));
+
+/* ------------------------------------------------------------------ */
+/* Design tokens (LIGHT CREAM only)                                    */
+/* Usage: bg-cream, bg-cream-50, bg-cream-100, border-line, text-ink,  */
+/* text-ink-soft, text-muted, bg-accent, bg-accent-soft, text-accent-2,*/
+/* bg-sage, shadow-soft, shadow-lift, rounded-card, font-heading ...   */
+/* ------------------------------------------------------------------ */
+@theme {
+  /* Surfaces */
+  --color-cream: #f5f0e6;
+  --color-cream-50: #fbf8f2;
+  --color-cream-100: #f0e9db;
+  --color-line: #e3daca;
+
+  /* Text */
+  --color-ink: #16181a;
+  --color-ink-soft: #3a3d40;
+  --color-muted: #6e6a62;
+
+  /* Accents */
+  --color-accent: #1f4d3f;
+  --color-accent-soft: #dce8e1;
+  --color-accent-2: #1e3a5f;
+  --color-sage: #a8bfa9;
+
+  /* Radius */
+  --radius-card: 1.25rem;
+  --radius-pill: 9999px;
+
+  /* Shadows */
+  --shadow-soft: 0 1px 2px rgb(22 24 26 / 0.04), 0 8px 24px -12px rgb(22 24 26 / 0.12);
+  --shadow-lift: 0 2px 4px rgb(22 24 26 / 0.05), 0 18px 40px -18px rgb(22 24 26 / 0.22);
+  --shadow-ring: 0 0 0 1px #e3daca;
+
+  /* Motion */
+  --ease-ios: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Fonts come from next/font (app/layout.tsx) */
+@theme inline {
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-inter-tight), var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+
+  /* shadcn semantic colors, mapped to cream values (see :root below).
+     Note: `accent` and `muted` are the brand tokens above, not shadcn's. */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  color-scheme: light;
+  --radius: 0.75rem;
+
+  --background: #f5f0e6;
+  --foreground: #16181a;
+  --card: #fbf8f2;
+  --card-foreground: #16181a;
+  --popover: #fbf8f2;
+  --popover-foreground: #16181a;
+  --primary: #1f4d3f;
+  --primary-foreground: #fbf8f2;
+  --secondary: #f0e9db;
+  --secondary-foreground: #16181a;
+  --muted-foreground: #6e6a62;
+  --accent-foreground: #fbf8f2;
+  --destructive: #b42318;
+  --border: #e3daca;
+  --input: #e3daca;
+  --ring: #1f4d3f;
+  --chart-1: #1f4d3f;
+  --chart-2: #1e3a5f;
+  --chart-3: #a8bfa9;
+  --chart-4: #3a3d40;
+  --chart-5: #dce8e1;
+  --sidebar: #fbf8f2;
+  --sidebar-foreground: #16181a;
+  --sidebar-primary: #1f4d3f;
+  --sidebar-primary-foreground: #fbf8f2;
+  --sidebar-accent: #f0e9db;
+  --sidebar-accent-foreground: #16181a;
+  --sidebar-border: #e3daca;
+  --sidebar-ring: #1f4d3f;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-cream text-ink antialiased;
+  }
+  ::selection {
+    @apply bg-accent-soft text-ink;
+  }
+  section[id] {
+    scroll-margin-top: 96px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Morph loader keyframes (components/ui/morph-loading.tsx) */
+@keyframes morph-0 {0%,100%{transform:translate(0,0) scale(1);border-radius:0%}25%{transform:translate(20px,-20px) scale(1.2);border-radius:50%}50%{transform:translate(40px,0) scale(.8);border-radius:25%}75%{transform:translate(20px,20px) scale(1.1);border-radius:75%}}
+@keyframes morph-1 {0%,100%{transform:translate(0,0) scale(1) rotate(0deg);border-radius:0%}25%{transform:translate(-20px,-20px) scale(1.3) rotate(90deg);border-radius:50%}50%{transform:translate(-40px,0) scale(.7) rotate(180deg);border-radius:25%}75%{transform:translate(-20px,20px) scale(1.2) rotate(270deg);border-radius:75%}}
+@keyframes morph-2 {0%,100%{transform:translate(0,0) scale(1);border-radius:0%}25%{transform:translate(-20px,20px) scale(.9);border-radius:100%}50%{transform:translate(0,40px) scale(1.4);border-radius:0%}75%{transform:translate(20px,20px) scale(.8);border-radius:50%}}
+@keyframes morph-3 {0%,100%{transform:translate(0,0) scale(1) rotate(0deg);border-radius:0%}25%{transform:translate(20px,20px) scale(1.1) rotate(-90deg);border-radius:25%}50%{transform:translate(0,-40px) scale(1.3) rotate(-180deg);border-radius:100%}75%{transform:translate(-20px,-20px) scale(.9) rotate(-270deg);border-radius:75%}}
+
+/*
+ * Accent highlight: a sage marker (45%) under accent words (headings, hero). Sage reads
+ * clearly on cream, where the paler accent-soft almost disappeared.
+ * Animate `background-size` from `0% 0.32em` to `100% 0.32em` to draw it in.
+ */
+@utility accent-mark {
+  --accent-mark: color-mix(in srgb, var(--color-sage) 45%, transparent);
+  background-image: linear-gradient(var(--accent-mark), var(--accent-mark));
+  background-repeat: no-repeat;
+  background-position: 0 88%;
+  background-size: 100% 0.32em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
