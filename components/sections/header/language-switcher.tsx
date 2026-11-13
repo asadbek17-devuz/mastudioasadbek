@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
+import { useCallback, useEffect, useId, useRef, useState, type KeyboardEvent, type MouseEvent } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Check, ChevronDown, Globe } from "lucide-react";
 
@@ -21,6 +21,10 @@ const menuSpring = { type: "spring", stiffness: 520, damping: 34, mass: 0.7 } as
  * positioned ancestor (the header pill, which must be `relative` and must not clip
  * overflow). The pill never leaves the viewport, so neither does the menu at 360px.
  *
+ * The options are real links to /uz, /ru and /en (open in a new tab, copy the address).
+ * A plain click becomes a client navigation that keeps the hash and the
+ * scroll position (see `setLocale` in the provider); modified clicks open the link as usual.
+ *
  * Keyboard: Enter / Space / ArrowDown open (ArrowUp opens on the last option),
  * arrows / Home / End move, Enter / Space select, Escape closes and returns focus
  * to the trigger, Tab closes and moves on.
@@ -36,7 +40,7 @@ export function LanguageSwitcher({ className }: { className?: string }) {
 
   const root = useRef<HTMLDivElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
-  const items = useRef<(HTMLButtonElement | null)[]>([]);
+  const items = useRef<(HTMLAnchorElement | null)[]>([]);
 
   const selectedIndex = Math.max(0, switcherOrder.indexOf(locale));
   const last = switcherOrder.length - 1;
@@ -100,6 +104,11 @@ export function LanguageSwitcher({ className }: { className?: string }) {
         event.stopPropagation();
         close(true);
         break;
+      case " ":
+        // Links only activate on Enter; a menu item must also take Space.
+        event.preventDefault();
+        items.current[activeIndex]?.click();
+        break;
       case "Tab":
         // No preventDefault: focus moves on to the next control as usual.
         close(false);
@@ -107,7 +116,10 @@ export function LanguageSwitcher({ className }: { className?: string }) {
     }
   };
 
-  const choose = (next: Locale) => {
+  const choose = (event: MouseEvent<HTMLAnchorElement>, next: Locale) => {
+    // Ctrl / Cmd / Shift / middle click: let the browser open the link itself.
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+    event.preventDefault();
     setLocale(next);
     close(true);
   };
@@ -173,17 +185,18 @@ export function LanguageSwitcher({ className }: { className?: string }) {
               const meta = localeMeta[code];
               const selected = code === locale;
               return (
-                <button
+                <a
                   key={code}
+                  href={`/${code}`}
+                  hrefLang={meta.htmlLang}
                   ref={(el) => {
                     items.current[index] = el;
                   }}
-                  type="button"
                   role="menuitemradio"
                   aria-checked={selected}
                   lang={meta.htmlLang}
                   tabIndex={index === activeIndex ? 0 : -1}
-                  onClick={() => choose(code)}
+                  onClick={(event) => choose(event, code)}
                   className={cn(
                     "flex h-11 w-full shrink-0 items-center gap-3 rounded-xl px-3 text-left text-sm font-medium whitespace-nowrap",
                     "transition-[color,background-color,transform] duration-200 ease-ios active:scale-[0.98] motion-reduce:transition-none",
@@ -206,7 +219,7 @@ export function LanguageSwitcher({ className }: { className?: string }) {
                     className={cn("size-4 shrink-0", selected ? "opacity-100" : "opacity-0")}
                     strokeWidth={2.25}
                   />
-                </button>
+                </a>
               );
             })}
           </motion.div>

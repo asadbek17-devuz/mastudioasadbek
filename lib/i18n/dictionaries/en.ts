@@ -1,6 +1,11 @@
 import type { Dictionary } from "@/lib/i18n/types";
 
 export const en: Dictionary = {
+  meta: {
+    title: "Asadbek — Full-stack Developer, Co-founder of MA STUDIO | Portfolio",
+    description:
+      "Asadbek is a full-stack developer from Tashkent, Uzbekistan, and a co-founder of MA STUDIO. 3+ years of experience in full-stack web development and Linux. Studied at Mars IT School.",
+  },
   nav: {
     labels: {
       home: "Home",
@@ -8,10 +13,10 @@ export const en: Dictionary = {
       journey: "Journey",
       projects: "Projects",
       stack: "Stack",
-      startups: "Startups",
-      contact: "Contact",
+      startups: "Startup",
     },
-    cta: "Let's talk",
+    cta: "MA\u00A0STUDIO",
+    skip: "Skip to content",
     primaryAria: "Primary",
     homeAria: "back to top",
   },
@@ -23,161 +28,125 @@ export const en: Dictionary = {
   },
   profile: {
     name: "Asadbek",
-    fullName: "Asadbek",
-    role: "Software Engineer & Web Developer",
+    role: "Full-stack Developer, Co-founder of MA\u00A0STUDIO",
     location: "Tashkent, Uzbekistan",
-    city: "Tashkent",
-    country: "Uzbekistan",
-    tagline: "I build fast, friendly web products and help new developers ship their first ones.",
-    intro:
-      "I design and build web apps end to end, from the first sketch to the deployed product. Most days I write TypeScript, care a lot about small details, and teach what I learn.",
-    avatarAlt: "Laptop with code on screen on a wooden desk",
+    tagline:
+      "I'm a full-stack developer with 3+ years of experience across the web and Linux. I studied at Mars IT School, interned there and at Navi Global, then co-founded the MA\u00A0STUDIO studio with a friend.",
   },
   stats: {
-    years: "Years building for the web",
-    projects: "Projects shipped",
-    students: "Students mentored",
-    startups: "Startups started",
-  },
-  metrics: {
-    students: "Students",
-    courses: "Courses",
-    hired: "Hired after graduation",
-    products: "Products launched",
-    team: "Team members",
-    betaUsers: "Beta users",
-    mentors: "Mentors",
-    projectsShipped: "Projects shipped",
-    studentsMentored: "Students mentored",
+    years: "Years of full-stack experience",
+    internships: "Internships: Mars IT School, Navi Global",
+    startups: "Startup co-founded: MA\u00A0STUDIO",
   },
   hero: {
     greetingBefore: "Hi, I'm ",
     greetingAfter: "",
     headline: [
-      { text: "Software" },
+      { text: "Full-stack" },
+      { text: "software" },
       { text: "engineer" },
-      { text: "building" },
-      { text: "clean," },
-      { text: "fast" },
-      { text: "web", accent: true },
-      { text: "products.", accent: true },
+      { text: "and" },
+      { text: "co-founder" },
+      { text: "of" },
+      { text: "MA\u00A0STUDIO.", accent: true },
     ],
     viewProjects: "View projects",
-    contactMe: "Contact me",
-    socialsAria: "Social links",
-    basedIn: "Based in Tashkent",
-    nowEyebrow: "Now building",
-    nowLine: "Teaching web development from scratch, with real projects.",
-    nowAria: "Now building: {name}. See startups",
-    stackEyebrow: "Daily stack",
-    stackTitle: "Tools I ship with",
-    stackAria: "My daily stack. See full stack",
+    studioSite: "MA\u00A0STUDIO website",
   },
   about: {
     heading: {
       eyebrow: "About me",
-      title: "A developer who sweats the",
-      accent: "small details",
+      title: "From student to",
+      accent: "studio co-founder",
       description:
-        "The short version: I build web products, run an IT academy, and like keeping things simple.",
+        "The short version: I'm a full-stack developer, I work with Linux, I co-founded MA\u00A0STUDIO, and I have taught.",
     },
     paragraphs: [
-      "I'm Asadbek, a software engineer from Tashkent. I started by building small websites for friends, and it slowly turned into a career and a habit I can't stop.",
-      "Today I build web applications with React, Next.js and Node.js. I like products that feel calm and quick, code that the next person can read, and teams that talk openly.",
-      "Outside client work I run an IT academy, where I help beginners go from zero to their first job. Teaching keeps me honest about the basics.",
+      "I'm Asadbek, a full-stack developer from Tashkent. I learned to code at Mars IT School and then stayed on there as an intern.",
+      "My next internship was at Navi Global, and after that a friend and I founded our startup, MA\u00A0STUDIO. Today I have 3+ years of experience: I build web apps end to end, from the interface to the server, and I'm at home on Linux.",
+      "I have teaching experience too. Explaining something to another person is the fastest way to find out how well I understand it myself.",
     ],
     highlights: {
-      product: {
-        title: "Product-minded",
-        description: "I think about the user and the business, not only the ticket.",
+      fullstack: {
+        title: "Full stack",
+        description: "From the interface to the server: I can build a web app end to end.",
       },
-      code: {
-        title: "Clean, typed code",
-        description: "TypeScript everywhere, small components, and tests where they matter.",
+      linux: {
+        title: "Linux",
+        description: "I'm comfortable in the terminal and on servers.",
       },
-      teacher: {
-        title: "Teacher at heart",
-        description: "Hundreds of students mentored, from first HTML page to first offer.",
+      founder: {
+        title: "Co-founder",
+        description: "I founded MA\u00A0STUDIO together with a friend, and we keep growing it.",
       },
-      delivery: {
-        title: "Ships on time",
-        description: "Clear scope, short feedback loops, and no surprises at the end.",
+      teaching: {
+        title: "Teaching experience",
+        description: "I have taught, so I know how to explain hard things simply.",
       },
     },
     labels: {
       story: "My story",
       howIWork: "How I work",
       currently: "Currently",
-      whatIBring: "What I bring",
+      whatIBring: "What I'm good at",
     },
     currently: {
-      academy: { label: "Running {name}", detail: "New web dev group every month" },
-      clients: { label: "Building client web apps", detail: "Next.js, TypeScript, Postgres" },
-      learning: { label: "Learning Go", detail: "For faster, simpler backends" },
+      studio: { label: "Growing {name}", detail: "Web apps, products and MVPs" },
+      fullstack: { label: "Building full-stack web apps", detail: "Frontend, backend, databases" },
+      linux: { label: "Going deeper into Linux", detail: "Systems and servers" },
     },
     values: [
-      { title: "Clarity over cleverness", text: "Code and UI that explain themselves." },
-      { title: "Small steps, shipped often", text: "You see progress every week." },
-      { title: "Honest, kind feedback", text: "No jargon, no surprises." },
+      { title: "Clarity over cleverness", text: "Code and interfaces that explain themselves." },
+      { title: "Small steps", text: "I split big work into parts that are easy to check." },
+      { title: "Always learning", text: "I don't let go until I understand how it works." },
     ],
   },
   journey: {
     heading: {
       eyebrow: "Journey",
-      title: "Milestones along the",
-      accent: "way",
+      title: "The road",
+      accent: "so far",
       description:
-        "From a first line of code to an academy and a few startups. The road so far, one year at a time.",
+        "From my first lessons at Mars IT School to a studio of my own. The path so far, step by step.",
     },
     nextYear: "Next",
-    nextCta: "Let's build it together",
+    nextCta: "Visit the MA\u00A0STUDIO website",
     items: {
-      "first-code": {
-        title: "Wrote my first line of code",
-        description:
-          "Started with HTML, CSS and a lot of curiosity, building small websites for friends and family.",
-        tag: "Beginnings",
+      student: {
+        title: "Studied at Mars IT School",
+        description: "This is where I started programming and learned the foundations of web development.",
+        tag: "Study",
       },
-      "first-client": {
-        title: "First freelance client",
+      "mars-intern": {
+        title: "Intern at Mars IT School",
         description:
-          "Shipped a paid website for a local business and learned that deadlines and clear scope matter as much as code.",
-        tag: "Freelance",
+          "After my studies I stayed at the same school as an intern and put what I had learned to work.",
+        tag: "Internship",
       },
-      "product-team": {
-        title: "Joined a product team",
-        description:
-          "Moved to React and TypeScript full time, worked in sprints with designers and shipped features to real users.",
-        tag: "Product",
+      "navi-intern": {
+        title: "Intern at Navi Global",
+        description: "My second internship was at Navi Global: a new environment and new kinds of tasks.",
+        tag: "Internship",
       },
-      academy: {
-        title: "Founded ICO IT Academy",
-        description:
-          "Turned mentoring into a school: small groups, real projects and career support for beginners in Uzbekistan.",
-        tag: "Founder",
+      mastudio: {
+        title: "Co-founded MA\u00A0STUDIO",
+        description: "A friend and I started our own startup: a studio that builds web apps, digital products and MVPs.",
+        tag: "Co-founder",
       },
-      graduates: {
-        title: "First graduates hired",
+      teaching: {
+        title: "Teaching experience",
         description:
-          "Our first cohorts landed developer jobs, and the academy grew through word of mouth.",
+          "Along the way I also taught. Explaining things to others made my own understanding deeper.",
         tag: "Teaching",
       },
-      kodline: {
-        title: "Co-founded Kodline",
-        description:
-          "Started a product studio building web apps and MVPs for local businesses and early-stage founders.",
-        tag: "Startup",
-      },
-      growth: {
-        title: "500+ students and a third startup",
-        description:
-          "Passed 500 students at the academy and started Mentorly to pair junior developers with experienced mentors.",
-        tag: "Growth",
+      fullstack: {
+        title: "Full-stack & Linux developer",
+        description: "3+ years of experience: I build web apps end to end and work on Linux.",
+        tag: "Today",
       },
       next: {
-        title: "Your product could be next",
-        description:
-          "Growing the startups, building more products people enjoy using, and teaching the next 1,000 developers.",
+        title: "Growing MA\u00A0STUDIO and going deeper into systems",
+        description: "I keep building the studio and deepening what I know about Linux and systems.",
         tag: "What's next",
       },
     },
@@ -202,7 +171,7 @@ export const en: Dictionary = {
       learnly: {
         title: "Learnly LMS",
         description:
-          "A learning platform for an IT academy with courses, homework review, live progress and payments for 1,000+ students.",
+          "A learning platform with courses, homework review, live progress and payments.",
         imageAlt: "Analytics dashboard on a laptop screen",
       },
       "pulse-analytics": {
@@ -220,7 +189,7 @@ export const en: Dictionary = {
       devtrack: {
         title: "DevTrack API",
         description:
-          "A REST and webhook API for tracking tasks across teams, with role-based access, audit logs and 99.9% uptime.",
+          "A REST and webhook API for tracking tasks across teams, with role-based access and audit logs.",
         imageAlt: "Close-up of colorful code on a monitor",
       },
       teamspace: {
@@ -238,7 +207,6 @@ export const en: Dictionary = {
       accent: "with",
       description: "The tools I reach for every week, and how well I know each one.",
     },
-    legendAria: "Skill level legend",
     playground: {
       filterAria: "Filter tools by category",
       all: "All",
@@ -284,87 +252,136 @@ export const en: Dictionary = {
   },
   startups: {
     heading: {
-      eyebrow: "Beyond client work",
-      title: "Startups &",
-      accent: "ventures",
-      description:
-        "Companies I started or help run, mostly around education and helping developers grow.",
+      eyebrow: "Startup",
+      title: "The studio I",
+      accent: "co-founded",
+      description: "MA\u00A0STUDIO is the startup I founded together with a friend, and we keep building it.",
     },
     visit: "Visit {name}",
-    present: "Present",
-    statuses: {
-      Active: "Active",
-      Growing: "Growing",
-      Building: "Building",
-      Exited: "Exited",
-      Paused: "Paused",
-    },
     items: {
-      "ico-it-academy": {
-        role: "Founder & Lead Mentor",
+      mastudio: {
+        role: "Co-founder & Lead Developer",
         description:
-          "An IT education academy in Uzbekistan that teaches web development from scratch, with small groups, real projects and career support.",
+          "The software studio my friend Miraziz and I founded. We design and build web apps, digital products and MVPs, from the first idea to launch.",
       },
-      kodline: {
-        role: "Co-founder & CTO",
-        description:
-          "A small product studio building web apps and MVPs for local businesses and early-stage founders.",
-      },
-      mentorly: {
-        role: "Founder",
-        description:
-          "A platform that matches junior developers with experienced mentors for weekly code reviews and career calls.",
-      },
+    },
+    foundersLabel: "Founders",
+    factsLabel: "What the studio does",
+    facts: {
+      webApps: { title: "Web apps", text: "The full cycle, from the interface to the server." },
+      products: { title: "Digital products", text: "From an idea to a working product." },
+      mvp: { title: "MVPs", text: "A first version to test an idea quickly." },
     },
   },
-  contact: {
+  process: {
     heading: {
-      eyebrow: "Contact",
-      title: "Let's build something",
-      accent: "together",
-      description:
-        "Have a product idea, a site that needs care, or a team that needs one more pair of hands? Send a short note and I'll reply within a day or two.",
+      eyebrow: "How I build",
+      title: "From idea",
+      accent: "to product",
+      description: "Drag the handle and watch one screen go from a paper sketch to a shipped product.",
     },
-    remote: "works remotely",
-    formTitle: "Write a message",
-    formNote: "All fields are required.",
-    socialsAria: "Social profiles",
-    form: {
-      labels: { name: "Your name", email: "Email", message: "Message" },
-      placeholders: {
-        name: "Jasur Karimov",
-        email: "name@site.com",
-        message: "A few words about the project",
+    sliderAria: "Product stage",
+    stagesAria: "Jump to a stage",
+    frameAria: "Illustration: the same product screen shown at the selected stage",
+    stages: {
+      idea: {
+        title: "Idea",
+        text: "I start on paper: who it is for, the one job it must do, and the smallest version worth shipping.",
       },
-      messageHint: "What are you building, and when do you need it?",
-      errors: {
-        name: "Add your name so I know who to reply to.",
-        email: "This email looks incomplete, for example name@site.com.",
-        message: "Write a few more words about your project (10+ characters).",
+      wireframe: {
+        title: "Wireframe",
+        text: "Structure before style: grey boxes settle the layout, flow and content while changes are still cheap.",
       },
-      note: "Opens your email app with the message filled in.",
-      send: "Send message",
-      sending: "Opening mail…",
-      sent: "Ready to send",
-      sentStatus: "Your email app should open with the message ready to send.",
-      subject: "Project inquiry from {name}",
+      code: {
+        title: "Code",
+        text: "I build it from typed, reusable components, with real data and a live preview from day one.",
+      },
+      live: {
+        title: "Live",
+        text: "It ships fast, accessible and measured, then keeps improving with what real users do.",
+      },
     },
-    copy: {
-      copy: "Copy",
-      copied: "Copied",
-      copyAria: "Copy email address",
-      copiedAria: "Email copied",
-      copiedStatus: "Email address copied to clipboard",
-      emailDirect: "Email me directly",
+    mock: {
+      note: "users must see progress at a glance!",
+      greeting: "Good morning",
+      sub: "Here is how today is going",
+      metric: "Orders shipped",
+      live: "Live",
+      nav: ["Overview", "Orders"],
+      rows: ["New customers", "Response time", "Rating"],
+    },
+  },
+  story: {
+    heading: {
+      eyebrow: "Story",
+      title: "Me in",
+      accent: "one minute",
+      description: "Six short frames, from the first line of code to our own studio. It plays by itself, or you can flip through at your own pace.",
+    },
+    playerAria: "Story player",
+    progressAria: "Story progress",
+    progressText: "Chapter {n} of {total}: {title}",
+    controls: {
+      play: "Play",
+      pause: "Pause",
+      previous: "Previous chapter",
+      next: "Next chapter",
+      replay: "Watch again",
+    },
+    chapters: {
+      start: {
+        eyebrow: "The beginning",
+        title: "It all started with",
+        accent: "one line of code.",
+        line: "I studied at Mars IT School: that is where programming began for me.",
+      },
+      marsIntern: {
+        eyebrow: "First internship",
+        title: "From student",
+        accent: "to intern.",
+        line: "I stayed at Mars IT School as an intern and put what I had learned to work.",
+      },
+      navi: {
+        eyebrow: "New ground",
+        title: "New team,",
+        accent: "new tasks.",
+        line: "My second internship was at Navi Global: a different environment with different demands.",
+      },
+      studio: {
+        eyebrow: "Our own studio",
+        title: "With a friend, we founded",
+        accent: "MA\u00A0STUDIO.",
+        line: "Now we turn ideas into products ourselves.",
+      },
+      teaching: {
+        eyebrow: "Teaching",
+        title: "By teaching,",
+        accent: "I learned too.",
+        line: "I have teaching experience: if you can explain it, you really know it.",
+      },
+      today: {
+        eyebrow: "Today",
+        title: "Full-stack and",
+        accent: "Linux developer.",
+        line: "3+ years of experience. And the road goes on.",
+      },
+    },
+    visual: {
+      hello: "Hello",
+      student: "student",
+      intern: "intern",
+      mentor: "mentor",
+      chips: ["Full-stack", "Linux", "3+ years"],
+    },
+    outro: {
+      tagline: "Full-stack · Linux · MA\u00A0STUDIO",
+      cta: "Visit MA\u00A0STUDIO",
     },
   },
   footer: {
-    tagline:
-      "Software Engineer & Web Developer in Tashkent, Uzbekistan. Building calm, fast web products and teaching others to do the same.",
+    ctaLink: "MA\u00A0STUDIO website",
+    facts: ["Full-stack", "Linux", "Co-founder of MA\u00A0STUDIO"],
     navAria: "Footer",
-    navigate: "Navigate",
-    elsewhere: "Elsewhere",
     backToTop: "Back to top",
-    rights: "All rights reserved.",
   },
 };

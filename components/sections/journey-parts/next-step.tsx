@@ -3,14 +3,14 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowButton, focusRing } from "@/components/sections/shared/hover";
 import { railX, rowGrid, YearBadge } from "@/components/sections/journey-parts/milestone";
-import type { JourneyMilestone } from "@/lib/data";
+import { STUDIO_URL, type JourneyMilestone } from "@/lib/data";
 import { useT } from "@/lib/i18n";
 import { cardHover, cardTap, fadeIn, fadeUp, reveal, spring } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
 /**
  * Final open-ended step: dashed rail segment, outlined dashed node and a
- * "What's next" card that links to #contact. Always centered-left on lg so it
+ * "What's next" card that links out to the MA STUDIO site. Always centered-left on lg so it
  * reads as the road continuing.
  */
 export function NextStep({ milestone, index }: { milestone: JourneyMilestone; index: number }) {
@@ -20,18 +20,20 @@ export function NextStep({ milestone, index }: { milestone: JourneyMilestone; in
   const left = index % 2 === 0;
 
   return (
-    <div className="relative pt-8 lg:pt-12">
+    // Phones: the milestones above are a carousel with no vertical rail, so the dashed
+    // segment and the node are dropped and the card spans the full width.
+    <div className="relative pt-6 sm:pt-8 lg:pt-12">
       {/* Dashed segment from the end of the solid line down to this node's center. */}
       <span
         aria-hidden="true"
         className={cn(
-          "absolute top-0 h-[calc(2rem+1.25rem)] border-l-2 border-dashed border-accent/40 lg:h-[calc(3rem+1.75rem)]",
+          "absolute top-0 h-[calc(2rem+1.25rem)] border-l-2 border-dashed border-accent/40 max-sm:hidden lg:h-[calc(3rem+1.75rem)]",
           railX
         )}
       />
 
-      <div className={cn("group/row relative", rowGrid)}>
-        <div className="relative z-10 col-start-1 row-start-1 flex justify-center lg:col-start-2">
+      <div className={cn("group/row relative", rowGrid, "max-sm:grid-rows-1 max-sm:gap-y-0")}>
+        <div className="relative z-10 col-start-1 row-start-1 flex justify-center max-sm:hidden lg:col-start-2">
           <div className="grid size-10 place-items-center rounded-full border-2 border-dashed border-accent bg-cream-50 text-accent transition-[scale] duration-300 ease-ios group-hover/row:scale-110 motion-reduce:transition-none lg:size-14">
             <Icon aria-hidden="true" className="size-4 lg:size-5" strokeWidth={1.75} />
           </div>
@@ -55,17 +57,19 @@ export function NextStep({ milestone, index }: { milestone: JourneyMilestone; in
           whileInView="show"
           viewport={reveal}
           className={cn(
-            "col-start-2 row-start-1 flex min-w-0",
+            "col-start-2 row-start-1 flex min-w-0 max-sm:col-start-1",
             left ? "lg:col-start-1 lg:justify-end" : "lg:col-start-3 lg:justify-start"
           )}
         >
           <motion.a
-            href="#contact"
+            href={STUDIO_URL}
+            target="_blank"
+            rel="noopener"
             whileHover={reduce ? undefined : cardHover}
             whileTap={reduce ? undefined : cardTap}
             transition={spring}
             className={cn(
-              "group flex w-full min-w-0 flex-col gap-2.5 rounded-card border border-dashed border-accent/40 bg-cream-50/70 p-4 transition-[box-shadow,border-color,background-color] duration-300 ease-ios hover:border-accent/70 hover:bg-cream-50 hover:shadow-lift min-[390px]:p-5 lg:max-w-md lg:p-6",
+              "group flex w-full min-w-0 flex-col gap-2.5 rounded-card border border-dashed border-accent/40 bg-cream-50/70 p-5 transition-[box-shadow,border-color,background-color] duration-300 ease-ios hover:border-accent/70 hover:bg-cream-50 hover:shadow-lift lg:max-w-md lg:p-6",
               focusRing
             )}
           >

@@ -9,7 +9,8 @@ export const pad = (n: number) => String(n + 1).padStart(2, "0");
 /** Text of the address pill: the real domain for live links, the slug otherwise. */
 export function addressOf(project: Pick<LocalizedProject, "href" | "slug">) {
   try {
-    if (/^https?:\/\//.test(project.href)) return new URL(project.href).hostname.replace(/^www\./, "");
+    const { href } = project;
+    if (href && /^https?:\/\//.test(href)) return new URL(href).hostname.replace(/^www\./, "");
   } catch {
     /* fall through to the slug */
   }

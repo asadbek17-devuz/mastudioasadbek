@@ -6,20 +6,22 @@
  *   const { projects, navItems } = useData(); // lib/data merged with the translations
  *   format(t.startups.visit, { name })      // "{name}" placeholders
  *
- * The hooks need a client component ("use client") under <LanguageProvider>.
+ * The hooks need a client component ("use client") under <LanguageProvider>, which gets the
+ * locale of the route and only that locale's dictionary from the server (`app/[lang]/page.tsx`).
+ * Server code loads a dictionary with `getDictionary` from `@/lib/i18n/dictionaries`; it is not
+ * re-exported here so the other two dictionaries stay out of the client bundle.
  */
 export {
   defaultLocale,
   isLocale,
   LOCALE_CHANGE_EVENT,
-  LOCALE_STORAGE_KEY,
+  LOCALE_COOKIE,
   localeMeta,
   locales,
   switcherOrder,
   type Locale,
   type LocaleMeta,
 } from "./config";
-export { dictionaries, getDictionary } from "./dictionaries";
 export { format } from "./format";
 export { LanguageProvider, useLocale, useT } from "./provider";
 export type { Dictionary, HeadingText, HeadlineWord } from "./types";

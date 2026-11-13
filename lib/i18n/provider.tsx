@@ -1,91 +1,32 @@
 "use client";
 
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useSyncExternalStore,
-  type ReactNode,
-} from "react";
+import { useRouter } from "next/navigation";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, type ReactNode } from "react";
 
-import {
-  defaultLocale,
-  isLocale,
-  LOCALE_CHANGE_EVENT,
-  LOCALE_STORAGE_KEY,
-  localeMeta,
-  type Locale,
-} from "@/lib/i18n/config";
-import { getDictionary } from "@/lib/i18n/dictionaries";
+import { defaultLocale, isLocale, LOCALE_CHANGE_EVENT, LOCALE_COOKIE, type Locale } from "@/lib/i18n/config";
 import type { Dictionary } from "@/lib/i18n/types";
 
 /*
- * Locale store.
+ * Locale context.
  *
- * The page is static, so the server always renders `defaultLocale`. On the client
- * `useSyncExternalStore` hydrates with the same default (getServerSnapshot) and then
- * re-renders with the stored / detected locale, so there is no hydration mismatch.
- * The intro loader covers the page while that swap happens.
+ * The locale is part of the URL (/uz, /ru, /en). The server renders each page in its
+ * own language and hands this provider the locale and only that locale's dictionary,
+ * so the first paint is already correct: no client-side swap, and the other two
+ * dictionaries never reach the browser.
+ *
+ * Switching language is a client navigation to the same hash on the other locale's
+ * URL with the scroll position kept. The choice is stored in a cookie that `proxy.ts`
+ * reads when "/" is requested.
  */
 
-let current: Locale | null = null;
-const listeners = new Set<() => void>();
+const ONE_YEAR = 60 * 60 * 24 * 365;
 
-function readStored(): Locale | null {
+function rememberLocale(locale: Locale): void {
   try {
-    const value = window.localStorage.getItem(LOCALE_STORAGE_KEY);
-    return isLocale(value) ? value : null;
+    document.cookie = `${LOCALE_COOKIE}=${locale}; path=/; max-age=${ONE_YEAR}; samesite=lax`;
   } catch {
-    // Storage blocked (private mode, sandboxed iframe).
-    return null;
+    // Cookies blocked: the URL still carries the locale.
   }
-}
-
-/** First visit: uz* -> uz, ru* -> ru, anything else -> default. */
-function detect(): Locale {
-  const languages = navigator.languages?.length ? navigator.languages : [navigator.language];
-  for (const language of languages) {
-    const base = language?.toLowerCase().split("-")[0];
-    if (base === "uz" || base === "ru") return base;
-    if (base === defaultLocale) return defaultLocale;
-  }
-  return defaultLocale;
-}
-
-function getSnapshot(): Locale {
-  if (current === null) current = readStored() ?? detect();
-  return current;
-}
-
-const getServerSnapshot = (): Locale => defaultLocale;
-
-function subscribe(notify: () => void): () => void {
-  listeners.add(notify);
-  // Keep other open tabs in sync.
-  const onStorage = (event: StorageEvent) => {
-    if (event.key !== LOCALE_STORAGE_KEY || !isLocale(event.newValue)) return;
-    if (event.newValue === current) return;
-    current = event.newValue;
-    notify();
-  };
-  window.addEventListener("storage", onStorage);
-  return () => {
-    listeners.delete(notify);
-    window.removeEventListener("storage", onStorage);
-  };
-}
-
-function setLocale(locale: Locale): void {
-  if (!isLocale(locale) || locale === current) return;
-  current = locale;
-  try {
-    window.localStorage.setItem(LOCALE_STORAGE_KEY, locale);
-  } catch {
-    // The choice still applies for this visit.
-  }
-  listeners.forEach((notify) => notify());
 }
 
 /**
@@ -129,29 +70,55 @@ const LocaleContext = createContext<LocaleContextValue>({
   setLocale: () => {},
 });
 
-export function LanguageProvider({ children }: { children: ReactNode }) {
-  const locale = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
-  /** The locale the DOM was last laid out for. Starts as what the server rendered. */
-  const painted = useRef<Locale>(defaultLocale);
+const DictionaryContext = createContext<Dictionary | null>(null);
 
+interface LanguageProviderProps {
+  /** Locale of the route, from the `[lang]` segment. */
+  locale: Locale;
+  /** Dictionary of that locale, loaded on the server. */
+  dictionary: Dictionary;
+  children: ReactNode;
+}
+
+export function LanguageProvider({ locale, dictionary, children }: LanguageProviderProps) {
+  const router = useRouter();
+  /** The locale the DOM was last laid out for. Starts as what the server rendered. */
+  const painted = useRef<Locale>(locale);
+
+  const setLocale = useCallback(
+    (next: Locale) => {
+      if (!isLocale(next) || next === locale) return;
+      rememberLocale(next);
+      router.push(`/${next}${window.location.hash}`, { scroll: false });
+    },
+    [locale, router],
+  );
+
+  // Only runs its body when the provider survives a locale navigation; a remount
+  // rebuilds every measurement on its own.
   useEffect(() => {
-    document.documentElement.lang = localeMeta[locale].htmlLang;
     if (painted.current === locale) return;
     painted.current = locale;
     return afterLocalePaint(locale);
   }, [locale]);
 
-  const value = useMemo(() => ({ locale, setLocale }), [locale]);
+  const value = useMemo(() => ({ locale, setLocale }), [locale, setLocale]);
 
-  return <LocaleContext.Provider value={value}>{children}</LocaleContext.Provider>;
+  return (
+    <LocaleContext.Provider value={value}>
+      <DictionaryContext.Provider value={dictionary}>{children}</DictionaryContext.Provider>
+    </LocaleContext.Provider>
+  );
 }
 
-/** Current locale and its setter. Must be used inside a client component. */
+/** Current locale and its setter (navigates to the same place in the other language). */
 export function useLocale(): LocaleContextValue {
   return useContext(LocaleContext);
 }
 
 /** Typed dictionary for the current locale: `const t = useT(); t.nav.cta`. */
 export function useT(): Dictionary {
-  return getDictionary(useContext(LocaleContext).locale);
+  const dictionary = useContext(DictionaryContext);
+  if (!dictionary) throw new Error("useT() must be used inside <LanguageProvider>.");
+  return dictionary;
 }

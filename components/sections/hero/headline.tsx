@@ -13,6 +13,11 @@ interface HeadlineProps {
   words: HeadlineWord[];
   /** Starts the reveal once true (after the page loader finishes). */
   play: boolean;
+  /**
+   * Whose headline this is. Rendered inside the <h1> for screen readers and search
+   * engines; sighted visitors read the name in the greeting right above.
+   */
+  name?: string;
   className?: string;
 }
 
@@ -25,7 +30,7 @@ interface HeadlineProps {
  * The timeline targets the word nodes that exist when it is built, so render this
  * with `key={locale}`: a language change remounts it and replays the reveal.
  */
-export function Headline({ words, play, className }: HeadlineProps) {
+export function Headline({ words, play, name, className }: HeadlineProps) {
   const scope = useRef<HTMLHeadingElement>(null);
 
   useGSAP(
@@ -55,6 +60,7 @@ export function Headline({ words, play, className }: HeadlineProps) {
 
   return (
     <h1
+      id="home-heading"
       ref={scope}
       className={cn(
         // Sized for the intro card (about 290px wide on a 360px phone, 650px on desktop).
@@ -62,12 +68,13 @@ export function Headline({ words, play, className }: HeadlineProps) {
         className
       )}
     >
+      {name ? <span className="sr-only">{name}: </span> : null}
       {words.map((word, i) => (
         <span key={`${word.text}-${i}`}>
           <span className="-mb-[0.12em] inline-block overflow-hidden pr-[0.04em] pb-[0.12em] align-bottom">
             <span
               data-word
-              className="inline-block origin-bottom-left will-change-transform [transform:translateY(110%)] motion-reduce:[transform:none]"
+              className="inline-block origin-bottom-left [transform:translateY(110%)] motion-reduce:[transform:none]"
             >
               {word.accent ? (
                 <span data-mark className="accent-mark text-accent">

@@ -1,11 +1,15 @@
 "use client";
 
+import dynamic from "next/dynamic";
+
 import { SectionHeading } from "@/components/ui/section-heading";
 import { SnapCarousel } from "@/components/sections/shared/snap-carousel";
 import { Stagger } from "@/components/sections/shared/stagger";
 import { useData, useT } from "@/lib/i18n";
 import { ProjectCard } from "./projects-parts/project-card";
-import { Showcase } from "./projects-parts/showcase";
+
+/** Desktop-only and below the fold: its own chunk, still prerendered on the server. */
+const Showcase = dynamic(() => import("./projects-parts/showcase").then((m) => m.Showcase));
 
 /**
  * Projects, in two layouts that share one visual language (browser-window
@@ -26,9 +30,9 @@ export function Projects() {
   const [leadProject, ...others] = ordered;
 
   return (
-    <section id="projects" className="py-14 sm:py-28">
+    <section id="projects" aria-labelledby="projects-heading" className="py-14 sm:py-28">
       <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
-        <SectionHeading {...t.projects.heading} />
+        <SectionHeading id="projects-heading" {...t.projects.heading} />
 
         <Showcase projects={ordered} className="mt-16 hidden lg:block" />
 

@@ -19,27 +19,18 @@ export const softSpring: Transition = {
   mass: 1,
 };
 
-/** Standard tween for opacity/color reveals. */
-export const tween: Transition = { duration: 0.6, ease };
-
-/** Premium reveal: fade in, rise 16px and un-blur (6px -> 0). */
+/** Reveal: fade in and rise 16px. Opacity + transform only, so it stays on the compositor. */
 export const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 16, filter: "blur(6px)" },
-  show: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.7, ease } },
+  hidden: { opacity: 0, y: 16 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease } },
 };
 
 /** Plain fade (used as the reduced-motion fallback). */
 export const fadeIn: Variants = {
   hidden: { opacity: 0 },
-  // Also reset y/blur: SSR may render with fadeUp's hidden state before
+  // Also reset y: SSR may render with fadeUp's hidden state before
   // useReducedMotion resolves, and those styles must not stick.
-  show: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.4, ease } },
-};
-
-/** Subtle scale-in for cards/images. */
-export const scaleIn: Variants = {
-  hidden: { opacity: 0, scale: 0.96 },
-  show: { opacity: 1, scale: 1, transition: { duration: 0.6, ease } },
+  show: { opacity: 1, y: 0, transition: { duration: 0.4, ease } },
 };
 
 /** Container variants that stagger children using `hidden` / `show`. */

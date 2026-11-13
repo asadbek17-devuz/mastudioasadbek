@@ -1,7 +1,4 @@
-/**
- * Single source of content for every section.
- * Copy marked "EDITABLE" is placeholder text for Asadbek to adjust.
- */
+/** Single source of content for every section. */
 import {
   Briefcase,
   Code2,
@@ -10,10 +7,9 @@ import {
   GraduationCap,
   Home,
   Layers,
-  Mail,
   Rocket,
   Route,
-  Trophy,
+  Terminal,
   User,
   Users,
   type LucideIcon,
@@ -23,9 +19,7 @@ import {
 /* Types                                                               */
 /* ------------------------------------------------------------------ */
 
-export type SectionId = "home" | "about" | "journey" | "projects" | "stack" | "startups" | "contact";
-
-export type SocialKey = "github" | "linkedin" | "telegram" | "instagram";
+export type SectionId = "home" | "about" | "journey" | "projects" | "stack" | "startups";
 
 /*
  * Stable ids. The translated text for every item lives in `lib/i18n/dictionaries/*`
@@ -33,59 +27,27 @@ export type SocialKey = "github" | "linkedin" | "telegram" | "instagram";
  * three dictionaries have its text. The English strings below stay as the fallback
  * for code that reads this file directly; localized UI should use `useData()`.
  */
-export type StatId = "years" | "projects" | "students" | "startups";
-export type HighlightId = "product" | "code" | "teacher" | "delivery";
+export type StatId = "years" | "internships" | "startups";
+export type HighlightId = "fullstack" | "linux" | "founder" | "teaching";
 export type ProjectSlug = "learnly" | "pulse-analytics" | "studio-site" | "devtrack" | "teamspace";
 export type StackCategoryId = "frontend" | "backend" | "tools" | "design";
 /** Stack items that are plain words rather than brand/tech names, so they get translated. */
 export type StackSkillId = "designSystems" | "prototyping" | "accessibility";
-export type StartupSlug = "ico-it-academy" | "kodline" | "mentorly";
-export type MetricId =
-  | "students"
-  | "courses"
-  | "hired"
-  | "products"
-  | "team"
-  | "betaUsers"
-  | "mentors"
-  | "projectsShipped"
-  | "studentsMentored";
+export type StartupSlug = "mastudio";
 export type JourneyId =
-  | "first-code"
-  | "first-client"
-  | "product-team"
-  | "academy"
-  | "graduates"
-  | "kodline"
-  | "growth"
+  | "student"
+  | "mars-intern"
+  | "navi-intern"
+  | "mastudio"
+  | "teaching"
+  | "fullstack"
   | "next";
-
-export interface Metric {
-  id: MetricId;
-  value: string;
-  label: string;
-}
-
-export interface Social {
-  key: SocialKey;
-  label: string;
-  href: string;
-  handle: string;
-}
 
 export interface Profile {
   name: string;
-  fullName: string;
   role: string;
   location: string;
   tagline: string;
-  intro: string;
-  email: string;
-  availableForWork: boolean;
-  avatar: string;
-  avatarAlt: string;
-  resumeHref: string;
-  socials: Social[];
 }
 
 export interface Stat {
@@ -107,7 +69,8 @@ export interface Project {
   tags: string[];
   image: string;
   imageAlt: string;
-  href: string;
+  /** Omit when there is no public page: the card then renders without a link. */
+  href?: string;
   repo?: string;
   year: number;
   featured?: boolean;
@@ -129,36 +92,25 @@ export interface StackCategory {
   items: StackItem[];
 }
 
-export type StartupStatus = "Active" | "Growing" | "Building" | "Exited" | "Paused";
-
 export interface Startup {
   slug: StartupSlug;
   name: string;
   role: string;
-  /** English fallback, e.g. "2022 — Present". Localized UI builds it from the years below. */
-  period: string;
-  startYear: number;
-  /** Omit while the startup is still running. */
-  endYear?: number;
   description: string;
-  metrics: Metric[];
-  href: string;
-  status: StartupStatus;
+  /** Omit when there is no public page: the card then renders without a link. */
+  href?: string;
 }
-
-export type NavIconName = "Home" | "User" | "Route" | "FolderKanban" | "Layers" | "Rocket" | "Mail";
 
 export interface NavItem {
   id: SectionId;
   label: string;
-  /** lucide-react icon name */
-  iconName: NavIconName;
-  /** lucide-react icon component (same icon as iconName) */
+  /** lucide-react icon component */
   icon: LucideIcon;
 }
 
 export interface JourneyMilestone {
   id: JourneyId;
+  /** Text of the pill: the step number ("01"…), since the path is told in order, not by year. */
   year: string;
   title: string;
   description: string;
@@ -167,8 +119,7 @@ export interface JourneyMilestone {
   tag?: string;
   /** Accent styling for the biggest milestones. */
   highlight?: boolean;
-  metric?: Metric;
-  /** Marks the open-ended "what's next" step (dashed line, outlined node, links to #contact). */
+  /** Marks the open-ended "what's next" step (dashed line, outlined node, links to the MA STUDIO site). */
   upcoming?: boolean;
 }
 
@@ -176,63 +127,55 @@ export interface JourneyMilestone {
 /* Content                                                             */
 /* ------------------------------------------------------------------ */
 
+/** External site of MA STUDIO, the studio Asadbek co-founded. */
+export const STUDIO_URL = "https://mastudio.uz";
+
+/** Name of the friend Asadbek founded MA STUDIO with: the second entry of the "Founders" row. */
+export const STUDIO_COFOUNDER = "Miraziz";
+
 const unsplash = (id: string) =>
   `https://images.unsplash.com/${id}?auto=format&fit=crop&w=1200&q=80`;
 
 export const profile: Profile = {
   name: "Asadbek",
-  fullName: "Asadbek", // EDITABLE: add surname
-  role: "Software Engineer & Web Developer",
+  role: "Full-stack Developer, Co-founder of MA\u00A0STUDIO",
   location: "Tashkent, Uzbekistan",
-  tagline: "I build fast, friendly web products and help new developers ship their first ones.",
-  intro:
-    "I design and build web apps end to end, from the first sketch to the deployed product. Most days I write TypeScript, care a lot about small details, and teach what I learn.",
-  email: "hello@example.com", // EDITABLE
-  availableForWork: true,
-  avatar: unsplash("photo-1517694712202-14dd9538aa97"),
-  avatarAlt: "Laptop with code on screen on a wooden desk",
-  resumeHref: "#", // EDITABLE
-  socials: [
-    { key: "github", label: "GitHub", href: "https://github.com/", handle: "@asadbek" },
-    { key: "linkedin", label: "LinkedIn", href: "https://www.linkedin.com/", handle: "in/asadbek" },
-    { key: "telegram", label: "Telegram", href: "https://t.me/", handle: "@asadbek" },
-    { key: "instagram", label: "Instagram", href: "https://www.instagram.com/", handle: "@asadbek" },
-  ],
+  tagline:
+    "I'm a full-stack developer with 3+ years of experience across the web and Linux. I studied at Mars IT School, interned there and at Navi Global, then co-founded the MA\u00A0STUDIO studio with a friend.",
 };
 
 export const stats: Stat[] = [
-  { id: "years", value: 5, suffix: "+", label: "Years building for the web" },
-  { id: "projects", value: 40, suffix: "+", label: "Projects shipped" },
-  { id: "students", value: 500, suffix: "+", label: "Students mentored" },
-  { id: "startups", value: 3, label: "Startups started" },
+  { id: "years", value: 3, suffix: "+", label: "Years of full-stack experience" },
+  { id: "internships", value: 2, label: "Internships: Mars IT School, Navi Global" },
+  { id: "startups", value: 1, label: "Startup co-founded: MA\u00A0STUDIO" },
 ];
 
 export const about: About = {
   paragraphs: [
-    "I'm Asadbek, a software engineer from Tashkent. I started by building small websites for friends, and it slowly turned into a career and a habit I can't stop.",
-    "Today I build web applications with React, Next.js and Node.js. I like products that feel calm and quick, code that the next person can read, and teams that talk openly.",
-    "Outside client work I run an IT academy, where I help beginners go from zero to their first job. Teaching keeps me honest about the basics.",
+    "I'm Asadbek, a full-stack developer from Tashkent. I learned to code at Mars IT School and then stayed on there as an intern.",
+    "My next internship was at Navi Global, and after that a friend and I founded our startup, MA\u00A0STUDIO. Today I have 3+ years of experience: I build web apps end to end, from the interface to the server, and I'm at home on Linux.",
+    "I have teaching experience too. Explaining something to another person is the fastest way to find out how well I understand it myself.",
   ],
   highlights: [
     {
-      id: "product",
-      title: "Product-minded",
-      description: "I think about the user and the business, not only the ticket.",
+      id: "fullstack",
+      title: "Full stack",
+      description: "From the interface to the server: I can build a web app end to end.",
     },
     {
-      id: "code",
-      title: "Clean, typed code",
-      description: "TypeScript everywhere, small components, and tests where they matter.",
+      id: "linux",
+      title: "Linux",
+      description: "I'm comfortable in the terminal and on servers.",
     },
     {
-      id: "teacher",
-      title: "Teacher at heart",
-      description: "Hundreds of students mentored, from first HTML page to first offer.",
+      id: "founder",
+      title: "Co-founder",
+      description: "I founded MA\u00A0STUDIO together with a friend, and we keep growing it.",
     },
     {
-      id: "delivery",
-      title: "Ships on time",
-      description: "Clear scope, short feedback loops, and no surprises at the end.",
+      id: "teaching",
+      title: "Teaching experience",
+      description: "I have taught, so I know how to explain hard things simply.",
     },
   ],
 };
@@ -242,11 +185,10 @@ export const projects: Project[] = [
     slug: "learnly",
     title: "Learnly LMS",
     description:
-      "A learning platform for an IT academy with courses, homework review, live progress and payments for 1,000+ students.",
+      "A learning platform with courses, homework review, live progress and payments.",
     tags: ["Next.js", "TypeScript", "PostgreSQL", "Prisma"],
     image: unsplash("photo-1460925895917-afdab827c52f"),
     imageAlt: "Analytics dashboard on a laptop screen",
-    href: "#",
     year: 2025,
     featured: true,
   },
@@ -258,7 +200,6 @@ export const projects: Project[] = [
     tags: ["React", "Node.js", "WebSockets", "Charts"],
     image: unsplash("photo-1551288049-bebda4e38f71"),
     imageAlt: "Data charts and graphs on a screen",
-    href: "#",
     year: 2025,
     featured: true,
   },
@@ -270,18 +211,16 @@ export const projects: Project[] = [
     tags: ["Next.js", "Tailwind CSS", "Sanity", "Vercel"],
     image: unsplash("photo-1498050108023-c5249f4df085"),
     imageAlt: "Laptop with code editor open on a desk",
-    href: "#",
     year: 2024,
   },
   {
     slug: "devtrack",
     title: "DevTrack API",
     description:
-      "A REST and webhook API for tracking tasks across teams, with role-based access, audit logs and 99.9% uptime.",
+      "A REST and webhook API for tracking tasks across teams, with role-based access and audit logs.",
     tags: ["NestJS", "PostgreSQL", "Redis", "Docker"],
     image: unsplash("photo-1555066931-4365d14bab8c"),
     imageAlt: "Close-up of colorful code on a monitor",
-    href: "#",
     year: 2024,
   },
   {
@@ -292,7 +231,6 @@ export const projects: Project[] = [
     tags: ["React", "TypeScript", "Supabase", "shadcn/ui"],
     image: unsplash("photo-1519389950473-47ba0277781c"),
     imageAlt: "Team working together on laptops",
-    href: "#",
     year: 2023,
   },
 ];
@@ -333,7 +271,7 @@ export const stack: StackCategory[] = [
       { name: "Docker", level: "Advanced" },
       { name: "Vercel", level: "Advanced" },
       { name: "GitHub Actions", level: "Comfortable" },
-      { name: "Linux", level: "Comfortable" },
+      { name: "Linux", level: "Advanced" },
     ],
   },
   {
@@ -349,145 +287,86 @@ export const stack: StackCategory[] = [
   },
 ];
 
+/** MA STUDIO is the only startup; the list shape is kept for the sections that read `startups[0]`. */
 export const startups: Startup[] = [
   {
-    slug: "ico-it-academy",
-    name: "ICO IT Academy",
-    role: "Founder & Lead Mentor", // EDITABLE
-    period: "2022 — Present", // EDITABLE
-    startYear: 2022,
+    slug: "mastudio",
+    name: "MA\u00A0STUDIO",
+    role: "Co-founder & Lead Developer",
     description:
-      "An IT education academy in Uzbekistan that teaches web development from scratch, with small groups, real projects and career support.", // EDITABLE
-    metrics: [
-      { id: "students", value: "500+", label: "Students" }, // EDITABLE
-      { id: "courses", value: "12", label: "Courses" }, // EDITABLE
-      { id: "hired", value: "70%", label: "Hired after graduation" }, // EDITABLE
-    ],
-    href: "#", // EDITABLE
-    status: "Active",
-  },
-  {
-    slug: "kodline",
-    name: "Kodline", // EDITABLE: placeholder startup
-    role: "Co-founder & CTO",
-    period: "2024 — Present",
-    startYear: 2024,
-    description:
-      "A small product studio building web apps and MVPs for local businesses and early-stage founders.",
-    metrics: [
-      { id: "products", value: "15+", label: "Products launched" },
-      { id: "team", value: "8", label: "Team members" },
-    ],
-    href: "#",
-    status: "Growing",
-  },
-  {
-    slug: "mentorly",
-    name: "Mentorly", // EDITABLE: placeholder startup
-    role: "Founder",
-    period: "2025 — Present",
-    startYear: 2025,
-    description:
-      "A platform that matches junior developers with experienced mentors for weekly code reviews and career calls.",
-    metrics: [
-      { id: "betaUsers", value: "120", label: "Beta users" },
-      { id: "mentors", value: "30", label: "Mentors" },
-    ],
-    href: "#",
-    status: "Building",
+      "The software studio my friend Miraziz and I founded. We design and build web apps, digital products and MVPs, from the first idea to launch.",
+    href: STUDIO_URL,
   },
 ];
 
 export const navItems: NavItem[] = [
-  { id: "home", label: "Home", iconName: "Home", icon: Home },
-  { id: "about", label: "About", iconName: "User", icon: User },
-  { id: "journey", label: "Journey", iconName: "Route", icon: Route },
-  { id: "projects", label: "Projects", iconName: "FolderKanban", icon: FolderKanban },
-  { id: "stack", label: "Stack", iconName: "Layers", icon: Layers },
-  { id: "startups", label: "Startups", iconName: "Rocket", icon: Rocket },
-  { id: "contact", label: "Contact", iconName: "Mail", icon: Mail },
+  { id: "home", label: "Home", icon: Home },
+  { id: "about", label: "About", icon: User },
+  { id: "journey", label: "Journey", icon: Route },
+  { id: "projects", label: "Projects", icon: FolderKanban },
+  { id: "stack", label: "Stack", icon: Layers },
+  { id: "startups", label: "Startup", icon: Rocket },
 ];
 
-/** Achievements roadmap, oldest first. The last item (upcoming) is the next goal. */
+/** The path so far, in order. The last item (upcoming) is the direction from here. */
 export const journey: JourneyMilestone[] = [
   {
-    id: "first-code",
-    year: "2019", // EDITABLE
-    title: "Wrote my first line of code", // EDITABLE
-    description:
-      "Started with HTML, CSS and a lot of curiosity, building small websites for friends and family.", // EDITABLE
-    icon: Code2,
-    tag: "Beginnings", // EDITABLE
-  },
-  {
-    id: "first-client",
-    year: "2020", // EDITABLE
-    title: "First freelance client", // EDITABLE
-    description:
-      "Shipped a paid website for a local business and learned that deadlines and clear scope matter as much as code.", // EDITABLE
-    icon: Briefcase,
-    tag: "Freelance", // EDITABLE
-  },
-  {
-    id: "product-team",
-    year: "2021", // EDITABLE
-    title: "Joined a product team", // EDITABLE
-    description:
-      "Moved to React and TypeScript full time, worked in sprints with designers and shipped features to real users.", // EDITABLE
-    icon: Users,
-    tag: "Product", // EDITABLE
-    metric: { id: "projectsShipped", value: "10+", label: "Projects shipped" }, // EDITABLE
-  },
-  {
-    id: "academy",
-    year: "2022", // EDITABLE
-    title: "Founded ICO IT Academy", // EDITABLE
-    description:
-      "Turned mentoring into a school: small groups, real projects and career support for beginners in Uzbekistan.", // EDITABLE
+    id: "student",
+    year: "01",
+    title: "Studied at Mars IT School",
+    description: "This is where I started programming and learned the foundations of web development.",
     icon: GraduationCap,
-    tag: "Founder", // EDITABLE
-    highlight: true,
-    metric: { id: "courses", value: "12", label: "Courses" }, // EDITABLE
+    tag: "Study",
   },
   {
-    id: "graduates",
-    year: "2023", // EDITABLE
-    title: "First graduates hired", // EDITABLE
-    description:
-      "Our first cohorts landed developer jobs, and the academy grew through word of mouth.", // EDITABLE
-    icon: Trophy,
-    tag: "Teaching", // EDITABLE
-    metric: { id: "hired", value: "70%", label: "Hired after graduation" }, // EDITABLE
+    id: "mars-intern",
+    year: "02",
+    title: "Intern at Mars IT School",
+    description: "After my studies I stayed at the same school as an intern and put what I had learned to work.",
+    icon: Code2,
+    tag: "Internship",
   },
   {
-    id: "kodline",
-    year: "2024", // EDITABLE
-    title: "Co-founded Kodline", // EDITABLE
-    description:
-      "Started a product studio building web apps and MVPs for local businesses and early-stage founders.", // EDITABLE
+    id: "navi-intern",
+    year: "03",
+    title: "Intern at Navi Global",
+    description: "My second internship was at Navi Global: a new environment and new kinds of tasks.",
+    icon: Briefcase,
+    tag: "Internship",
+  },
+  {
+    id: "mastudio",
+    year: "04",
+    title: "Co-founded MA\u00A0STUDIO",
+    description: "A friend and I started our own startup: a studio that builds web apps, digital products and MVPs.",
     icon: Rocket,
-    tag: "Startup", // EDITABLE
-    metric: { id: "projectsShipped", value: "40+", label: "Projects shipped" }, // EDITABLE
+    tag: "Co-founder",
+    highlight: true,
   },
   {
-    id: "growth",
-    year: "2025", // EDITABLE
-    title: "500+ students and a third startup", // EDITABLE
-    description:
-      "Passed 500 students at the academy and started Mentorly to pair junior developers with experienced mentors.", // EDITABLE
-    icon: Layers,
-    tag: "Growth", // EDITABLE
+    id: "teaching",
+    year: "05",
+    title: "Teaching experience",
+    description: "Along the way I also taught. Explaining things to others made my own understanding deeper.",
+    icon: Users,
+    tag: "Teaching",
+  },
+  {
+    id: "fullstack",
+    year: "06",
+    title: "Full-stack & Linux developer",
+    description: "3+ years of experience: I build web apps end to end and work on Linux.",
+    icon: Terminal,
+    tag: "Today",
     highlight: true,
-    metric: { id: "studentsMentored", value: "500+", label: "Students mentored" }, // EDITABLE
   },
   {
     id: "next",
-    year: "Next", // EDITABLE
-    title: "Your product could be next", // EDITABLE
-    description:
-      "Growing the startups, building more products people enjoy using, and teaching the next 1,000 developers.", // EDITABLE
+    year: "Next",
+    title: "Growing MA\u00A0STUDIO and going deeper into systems",
+    description: "I keep building the studio and deepening what I know about Linux and systems.",
     icon: Compass,
-    tag: "What's next", // EDITABLE
+    tag: "What's next",
     upcoming: true,
   },
 ];

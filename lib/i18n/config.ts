@@ -3,11 +3,11 @@ export const locales = ["en", "uz", "ru"] as const;
 
 export type Locale = (typeof locales)[number];
 
-/** The locale the server renders. Change it here only. */
-export const defaultLocale: Locale = "en";
+/** Where "/" goes when neither the cookie nor Accept-Language picks a locale (see `proxy.ts`). */
+export const defaultLocale: Locale = "uz";
 
-/** localStorage key that holds the visitor's explicit choice. */
-export const LOCALE_STORAGE_KEY = "lang";
+/** Cookie that holds the visitor's explicit choice; `proxy.ts` reads it when "/" is requested. */
+export const LOCALE_COOKIE = "lang";
 
 /**
  * Fired on `window` after the locale changed and React has committed the new text.
@@ -23,12 +23,14 @@ export interface LocaleMeta {
   nativeName: string;
   /** BCP 47 tag for `<html lang>` and `Intl`. */
   htmlLang: string;
+  /** Open Graph locale, e.g. "ru_RU". */
+  ogLocale: string;
 }
 
 export const localeMeta: Record<Locale, LocaleMeta> = {
-  uz: { code: "UZ", nativeName: "Oʻzbekcha", htmlLang: "uz" },
-  ru: { code: "RU", nativeName: "Русский", htmlLang: "ru" },
-  en: { code: "EN", nativeName: "English", htmlLang: "en" },
+  uz: { code: "UZ", nativeName: "Oʻzbekcha", htmlLang: "uz", ogLocale: "uz_UZ" },
+  ru: { code: "RU", nativeName: "Русский", htmlLang: "ru", ogLocale: "ru_RU" },
+  en: { code: "EN", nativeName: "English", htmlLang: "en", ogLocale: "en_US" },
 };
 
 /** Order of the options in the switcher menu. */

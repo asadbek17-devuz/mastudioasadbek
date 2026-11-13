@@ -78,7 +78,7 @@ function LevelMark({ level, className }: { level?: SkillLevel; className?: strin
 }
 
 const iconButton =
-  "group/btn relative grid size-11 place-items-center rounded-full border border-line bg-cream-50 text-ink-soft shadow-soft transition-[color,border-color,scale,box-shadow] duration-200 ease-ios hover:border-ink/20 hover:text-ink hover:shadow-lift active:scale-92 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:size-10";
+  "group/btn relative grid size-11 place-items-center rounded-full border border-line bg-cream-50 text-ink-soft shadow-soft transition-[color,border-color,scale,box-shadow] duration-200 ease-ios hover:border-ink/20 hover:text-ink hover:shadow-lift active:scale-92 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent lg:size-10";
 
 const tooltip =
   "pointer-events-none absolute top-full right-0 mt-2 hidden rounded-lg bg-ink px-2.5 py-1 text-xs font-medium whitespace-nowrap text-cream opacity-0 transition-opacity duration-150 group-hover/btn:opacity-100 group-focus-visible/btn:opacity-100 [@media(hover:hover)]:block";
@@ -179,7 +179,7 @@ export function StackPlayground() {
                   aria-pressed={on}
                   onClick={(e) => select(id, e.currentTarget)}
                   className={cn(
-                    "relative inline-flex h-11 shrink-0 items-center gap-2 rounded-pill px-3.5 text-sm font-medium whitespace-nowrap transition-colors duration-200 ease-ios focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:h-10 sm:px-4",
+                    "relative inline-flex h-11 shrink-0 items-center gap-2 rounded-pill px-3.5 text-sm font-medium whitespace-nowrap transition-colors duration-200 ease-ios focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:px-4 lg:h-10",
                     on ? "text-cream-50" : "text-ink-soft hover:text-ink"
                   )}
                 >

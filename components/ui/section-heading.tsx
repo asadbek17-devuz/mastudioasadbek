@@ -3,9 +3,12 @@
 import { motion, useReducedMotion, type Variants } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { ease } from "@/lib/motion";
+import { LogoMark } from "@/components/ui/logo";
 import { Reveal } from "@/components/ui/reveal";
 
 interface SectionHeadingProps {
+  /** Id of the <h2>, so the section can point at it with `aria-labelledby`. */
+  id?: string;
   /** Small uppercase label above the title, e.g. "Selected work". */
   eyebrow?: string;
   /** Main title text. */
@@ -31,6 +34,7 @@ const mark: Variants = {
 };
 
 export function SectionHeading({
+  id,
   eyebrow,
   title,
   accent,
@@ -50,11 +54,11 @@ export function SectionHeading({
     >
       {eyebrow ? (
         <span className="inline-flex items-center gap-2 text-[13px] font-medium tracking-[0.16em] text-muted uppercase sm:text-xs sm:tracking-[0.18em]">
-          <span aria-hidden="true" className="size-1.5 rounded-full bg-accent" />
+          <LogoMark className="h-2.5 w-auto shrink-0 text-accent" />
           {eyebrow}
         </span>
       ) : null}
-      <h2 className="font-heading text-[clamp(1.75rem,8vw,2.25rem)] leading-tight font-semibold tracking-[-0.03em] text-balance text-ink sm:text-4xl sm:leading-[calc(2.5/2.25)] md:text-5xl md:leading-[1.05]">
+      <h2 id={id} className="font-heading text-[clamp(1.75rem,8vw,2.25rem)] leading-tight font-semibold tracking-[-0.03em] text-balance text-ink sm:text-4xl sm:leading-[calc(2.5/2.25)] md:text-5xl md:leading-[1.05]">
         {title}
         {accent ? (
           <>

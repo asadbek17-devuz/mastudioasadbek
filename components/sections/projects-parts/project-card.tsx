@@ -3,7 +3,7 @@
 import { motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import { Reveal } from "@/components/ui/reveal";
-import { ArrowButton, cardSurface, focusRing } from "@/components/sections/shared/hover";
+import { ArrowButton, cardStatic, cardSurface, focusRing } from "@/components/sections/shared/hover";
 import { Parallax } from "@/components/sections/shared/scroll-fx";
 import { linkTarget } from "@/components/sections/shared/social-icons";
 import { snapItem } from "@/components/sections/shared/snap-carousel";
@@ -23,24 +23,26 @@ interface ProjectCardProps {
 /**
  * Phone and tablet card (below 1024px). Same language as the desktop showcase:
  * the screenshot sits in a browser window that rises out of a tinted stage,
- * with the index number and year under it. The whole card is one link.
+ * with the index number and year under it. The whole card is one link when the
+ * project has an `href`, a plain card otherwise.
  */
 export function ProjectCard({ project, index, lead = false }: ProjectCardProps) {
   const reduce = useReducedMotion();
   const t = useT();
+  const { href } = project;
+  const lift = Boolean(href) && !reduce;
 
   return (
     <Reveal inherit className={cn("flex min-w-0", lead ? "sm:col-span-2" : snapItem)}>
+      {/* No public page yet: an <a> without href is a plain, non-interactive card. */}
       <motion.a
-        href={project.href}
-        {...linkTarget(project.href)}
-        whileHover={reduce ? undefined : cardHover}
-        whileTap={reduce ? undefined : cardTap}
+        {...(href ? { href, ...linkTarget(href) } : {})}
+        whileHover={lift ? cardHover : undefined}
+        whileTap={lift ? cardTap : undefined}
         transition={spring}
         className={cn(
           "flex w-full min-w-0 flex-col rounded-[24px] p-2",
-          cardSurface,
-          focusRing,
+          href ? [cardSurface, focusRing] : cardStatic,
           lead && "sm:flex-row sm:items-stretch"
         )}
       >
@@ -100,10 +102,12 @@ export function ProjectCard({ project, index, lead = false }: ProjectCardProps) 
             ))}
           </ul>
 
-          <div className="mt-auto flex items-center justify-between gap-3 pt-4">
-            <span className="text-[15px] font-medium text-ink">{t.projects.viewProject}</span>
-            <ArrowButton className="size-10" />
-          </div>
+          {href ? (
+            <div className="mt-auto flex items-center justify-between gap-3 pt-4">
+              <span className="text-[15px] font-medium text-ink">{t.projects.viewProject}</span>
+              <ArrowButton className="size-10" />
+            </div>
+          ) : null}
         </div>
       </motion.a>
     </Reveal>

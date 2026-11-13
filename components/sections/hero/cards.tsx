@@ -1,24 +1,14 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
-import {
-  ArrowUpRight,
-  Code2,
-  FolderKanban,
-  GraduationCap,
-  Layers,
-  Mail,
-  MapPin,
-  Rocket,
-  type LucideIcon,
-} from "lucide-react";
+import { ArrowUpRight, MapPin } from "lucide-react";
 
-import { BentoCard, IconTile } from "@/components/sections/hero/bento-card";
+import { BentoCard } from "@/components/sections/hero/bento-card";
 import { heroCopy } from "@/components/sections/hero/copy";
 import { CountUp } from "@/components/sections/hero/count-up";
 import { Headline } from "@/components/sections/hero/headline";
 import { ArrowButton, focusRing } from "@/components/sections/shared/hover";
-import { socialIcons } from "@/components/sections/shared/social-icons";
+import { LogoMark } from "@/components/ui/logo";
+import { STUDIO_URL } from "@/lib/data";
 import { format, useData, useLocale, useT, type LocalizedStat } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
@@ -37,7 +27,6 @@ const dots = "bg-[radial-gradient(currentColor_1px,transparent_1.5px)] [backgrou
 /* ------------------------------------------------------------------ */
 
 export function IntroCard({ ready, className, drift }: CardProps & { ready: boolean }) {
-  const reduce = useReducedMotion();
   const t = useT();
   const { locale } = useLocale();
   const { profile } = useData();
@@ -58,29 +47,23 @@ export function IntroCard({ ready, className, drift }: CardProps & { ready: bool
             "absolute inset-y-0 right-0 w-2/3 text-accent/25 [mask-image:radial-gradient(ellipse_at_top_right,black,transparent_62%)]"
           )}
         />
+        {/* Brand mark as a quiet watermark, cropped by the bottom-right corner. */}
+        <LogoMark className="absolute -right-8 -bottom-14 h-48 w-auto text-accent/[0.06] sm:-right-6 sm:-bottom-20 sm:h-64 lg:h-80" />
       </div>
 
       <div className="relative flex items-center justify-between gap-3">
         <p className="flex min-w-0 items-center gap-2.5 text-[15px] font-medium text-ink-soft sm:text-base">
           <span
             aria-hidden="true"
-            className="grid size-9 shrink-0 place-items-center rounded-full bg-accent font-heading text-[15px] font-semibold text-cream shadow-soft"
+            className="grid size-9 shrink-0 place-items-center rounded-full bg-ink text-cream-50 shadow-soft"
           >
-            {profile.name.charAt(0)}
+            <LogoMark className="h-[46%] w-auto" />
           </span>
           <span className="min-w-0">
             {t.hero.greetingBefore}
             <span className="font-semibold text-ink">{profile.name}</span>
             {t.hero.greetingAfter}
           </span>
-          <motion.span
-            aria-hidden="true"
-            className="inline-block origin-[70%_70%]"
-            animate={ready && !reduce ? { rotate: [0, 16, -8, 14, -4, 10, 0] } : undefined}
-            transition={{ duration: 1.4, delay: 0.9, ease: "easeInOut" }}
-          >
-            👋
-          </motion.span>
         </p>
 
         <p className="hidden shrink-0 items-center gap-1.5 rounded-pill border border-line bg-cream-50/80 px-3 py-1.5 text-[13px] font-medium text-ink-soft sm:inline-flex">
@@ -89,14 +72,14 @@ export function IntroCard({ ready, className, drift }: CardProps & { ready: bool
         </p>
       </div>
 
-      <Headline key={locale} words={t.hero.headline} play={ready} className="relative mt-5 sm:mt-8 lg:mt-10" />
+      <Headline key={locale} name={profile.name} words={t.hero.headline} play={ready} className="relative mt-5 sm:mt-8 lg:mt-10" />
 
       <p className="relative mt-4 max-w-[46ch] text-[15px] leading-relaxed text-pretty text-ink-soft sm:mt-5 sm:text-lg">
         {profile.tagline}
       </p>
 
       <div className="relative mt-6 flex flex-wrap items-center gap-x-4 gap-y-3 sm:mt-8 lg:mt-auto lg:pt-10">
-        <div className="flex w-full items-center gap-2 min-[380px]:gap-2.5 sm:w-auto sm:gap-3">
+        <div className="flex w-full flex-wrap items-center gap-2 min-[380px]:gap-2.5 sm:w-auto sm:gap-3">
           <a
             href="#projects"
             className={cn(
@@ -110,7 +93,9 @@ export function IntroCard({ ready, className, drift }: CardProps & { ready: bool
             <CtaArrow />
           </a>
           <a
-            href="#contact"
+            href={STUDIO_URL}
+            target="_blank"
+            rel="noopener"
             className={cn(
               "inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-pill border border-ink/15 bg-cream-50 px-3 min-[380px]:px-4 text-[15px] font-medium whitespace-nowrap text-ink sm:flex-none sm:px-6",
               "transition-[background-color,border-color,color,scale] duration-300 ease-ios hover:border-accent/40 hover:bg-accent-soft hover:text-accent active:scale-[0.97]",
@@ -118,35 +103,10 @@ export function IntroCard({ ready, className, drift }: CardProps & { ready: bool
               "focus-visible:ring-offset-cream-50"
             )}
           >
-            <Mail aria-hidden="true" className="size-4" />
-            {t.hero.contactMe}
+            {t.hero.studioSite}
+            <ArrowUpRight aria-hidden="true" className="size-4" />
           </a>
         </div>
-
-        <ul className="-ml-2.5 flex items-center sm:ml-auto sm:-mr-2.5" aria-label={t.hero.socialsAria}>
-          {profile.socials.map((social) => {
-            const Icon = socialIcons[social.key];
-            return (
-              <li key={social.key}>
-                <a
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`${social.label} (${social.handle})`}
-                  title={social.label}
-                  className={cn(
-                    "grid size-11 place-items-center rounded-full text-muted",
-                    "transition-[color,background-color,scale] duration-300 ease-ios hover:bg-accent-soft hover:text-accent active:scale-[0.94]",
-                    focusRing,
-                    "focus-visible:ring-offset-cream-50"
-                  )}
-                >
-                  <Icon className="size-[18px]" />
-                </a>
-              </li>
-            );
-          })}
-        </ul>
       </div>
     </BentoCard>
   );
@@ -176,13 +136,15 @@ function CtaArrow() {
 /* ------------------------------------------------------------------ */
 
 export function FeaturedStatCard({ stat, ready, className, drift }: CardProps & { stat: LocalizedStat; ready: boolean }) {
+  const { locale } = useLocale();
+  const copy = heroCopy[locale];
   return (
     <BentoCard
       drift={drift}
       className={className}
-      surfaceClassName="flex min-h-28 items-center justify-between gap-4 border-accent bg-accent p-5 text-cream hover:border-accent sm:min-h-40 sm:flex-col sm:items-start sm:p-6 lg:min-h-0"
+      surfaceClassName="flex min-h-28 flex-col justify-end gap-4 lg:justify-between lg:gap-8 border-accent bg-accent p-5 text-cream hover:border-accent sm:min-h-40 sm:p-6 lg:min-h-0"
     >
-      {/* Decoration: soft highlight from the top-left, rings and dots in the far corner. */}
+      {/* Decoration: soft highlight from the top-left, dots and the brand mark in the far corner. */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
         <div className="absolute inset-0 bg-[radial-gradient(120%_90%_at_0%_0%,rgb(245_240_230/0.2),transparent_60%)]" />
         <div
@@ -191,21 +153,25 @@ export function FeaturedStatCard({ stat, ready, className, drift }: CardProps & 
             "absolute inset-0 text-cream/15 [mask-image:linear-gradient(to_top_left,black,transparent_55%)]"
           )}
         />
-        <svg
-          viewBox="0 0 200 200"
-          fill="none"
-          className="absolute -right-16 -bottom-20 size-56 text-cream/12 sm:-right-14 sm:-bottom-16 sm:size-60"
-        >
-          <circle cx="100" cy="100" r="38" stroke="currentColor" />
-          <circle cx="100" cy="100" r="62" stroke="currentColor" />
-          <circle cx="100" cy="100" r="86" stroke="currentColor" />
-          <circle cx="100" cy="100" r="99" stroke="currentColor" strokeDasharray="2 6" />
-        </svg>
+        {/* Brand mark as a quiet watermark, cropped by the bottom-right corner. */}
+        <LogoMark className="absolute -right-6 -bottom-10 h-36 w-auto text-cream/10 sm:-right-8 sm:-bottom-14 sm:h-52 lg:-right-10 lg:-bottom-16 lg:h-64" />
       </div>
 
-      <IconTile tone="dark" className="relative order-last sm:order-none">
-        <Code2 />
-      </IconTile>
+      {/* Desktop only: the card is tall there, so its top half says what the experience is in.
+          On phones and tablets the card is short and full width, the number alone fills it. */}
+      <div className="relative hidden min-w-0 lg:block">
+        <p className="inline-flex items-center gap-2.5 text-[13px] font-semibold tracking-[0.16em] text-cream/75 uppercase">
+          <LogoMark className="h-3.5 w-auto shrink-0 text-sage" />
+          {copy.experience}
+        </p>
+        <ul className="mt-5 border-b border-cream/15">
+          {copy.focus.map((line) => (
+            <li key={line} className="border-t border-cream/15 py-2.5 text-[15px] leading-snug font-medium text-cream">
+              {line}
+            </li>
+          ))}
+        </ul>
+      </div>
 
       <div className="relative min-w-0">
         <CountUp
@@ -224,24 +190,22 @@ export function FeaturedStatCard({ stat, ready, className, drift }: CardProps & 
 /* (c) Small stat                                                      */
 /* ------------------------------------------------------------------ */
 
-const statIcons: Partial<Record<LocalizedStat["id"], LucideIcon>> = {
-  projects: FolderKanban,
-  students: GraduationCap,
-};
-
 export function StatCard({ stat, ready, className, drift }: CardProps & { stat: LocalizedStat; ready: boolean }) {
-  const Icon = statIcons[stat.id] ?? Code2;
-
   return (
     <BentoCard
       drift={drift}
       className={className}
-      surfaceClassName="flex flex-col justify-between gap-5 p-4 sm:p-5"
+      surfaceClassName="flex flex-col justify-end p-4 sm:p-5 lg:pt-12"
     >
-      <IconTile>
-        <Icon />
-      </IconTile>
-      <div className="min-w-0">
+      {/* Decoration: the same dot field as the other cards, fading out from the top-right corner. */}
+      <div
+        aria-hidden="true"
+        className={cn(
+          dots,
+          "pointer-events-none absolute inset-0 text-accent/25 [mask-image:radial-gradient(ellipse_at_top_right,black,transparent_60%)]"
+        )}
+      />
+      <div className="relative min-w-0">
         <CountUp
           value={stat.value}
           suffix={stat.suffix}
@@ -273,26 +237,14 @@ export function NowBuildingCard({ className, drift }: CardProps) {
       className={className}
       surfaceClassName="flex flex-col gap-5 p-5 sm:p-6"
     >
-      <div className="flex items-center gap-3">
-        <IconTile>
-          <Rocket />
-        </IconTile>
-        <p className="min-w-0 flex-1 text-[13px] font-medium text-muted sm:text-sm">{copy.nowBuilding}</p>
-        <p className="inline-flex shrink-0 items-center gap-2 rounded-pill bg-accent-soft px-2.5 py-1 text-[13px] font-medium text-accent">
-          <span className="relative flex size-2">
-            <span className="absolute inset-0 animate-ping rounded-full bg-accent/50 motion-reduce:hidden" />
-            <span className="relative size-2 rounded-full bg-accent" />
-          </span>
-          {startup.statusLabel}
-        </p>
-      </div>
+      <p className="text-[13px] font-medium text-muted sm:text-sm">{copy.nowBuilding}</p>
 
       <div className="mt-auto flex items-end justify-between gap-4">
         <div className="min-w-0">
           <h2 className="font-heading text-xl leading-tight font-semibold tracking-[-0.02em] text-ink sm:text-2xl">
             {startup.name}
           </h2>
-          <p className="mt-1.5 text-[15px] leading-snug text-pretty text-ink-soft">{copy.academyLine}</p>
+          <p className="mt-1.5 text-[15px] leading-snug text-pretty text-ink-soft">{copy.studioLine}</p>
         </div>
         <ArrowButton />
       </div>
@@ -331,9 +283,6 @@ export function StackCard({ className, drift }: CardProps) {
       surfaceClassName="flex flex-col gap-5 p-5 sm:p-6"
     >
       <div className="flex items-center gap-3">
-        <IconTile>
-          <Layers />
-        </IconTile>
         <div className="min-w-0 flex-1">
           <h2 className="font-heading text-base leading-tight font-semibold tracking-[-0.01em] text-ink sm:text-lg">
             {copy.stackTitle}
@@ -343,7 +292,8 @@ export function StackCard({ className, drift }: CardProps) {
         <ArrowButton />
       </div>
 
-      <ul className="mt-auto flex flex-wrap gap-2">
+      {/* Phones: an even 2-column grid of chips; from 640px they wrap freely. */}
+      <ul className="mt-auto grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
         {heroStack.map((name, i) => (
           <li
             key={name}

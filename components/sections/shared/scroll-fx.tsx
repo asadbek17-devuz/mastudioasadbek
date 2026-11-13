@@ -3,7 +3,7 @@
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Children, Fragment, isValidElement, useRef, type ReactNode, type RefObject } from "react";
+import { useRef, type ReactNode, type RefObject } from "react";
 import { cn } from "@/lib/utils";
 
 /*
@@ -136,7 +136,7 @@ export function Parallax({ children, className, amount = 0.08 }: FxProps & { amo
   return (
     <div
       ref={ref}
-      className={cn("absolute inset-x-0 will-change-transform", className)}
+      className={cn("absolute inset-x-0", className)}
       style={{ top: `${-amount * 100}%`, height: `${(1 + amount * 2) * 100}%` }}
     >
       {children}
@@ -222,129 +222,5 @@ export function ScrubScale({ children, className, from = 0.96 }: FxProps & { fro
     <div ref={ref} className={className}>
       {children}
     </div>
-  );
-}
-
-/**
- * Heading whose words fade up one after another, scrubbed as it enters.
- * Strings are split on spaces. Elements (for example `<AccentWord>`) count as
- * one word and keep their own animation, since GSAP only moves the wrapper.
- */
-export function WordReveal({
-  children,
-  className,
-  id,
-  as: Tag = "h2",
-}: FxProps & { id?: string; as?: "h2" | "h3" }) {
-  const ref = useRef<HTMLHeadingElement>(null);
-
-  const words: ReactNode[] = [];
-  Children.forEach(children, (child) => {
-    if (typeof child === "string" || typeof child === "number") {
-      words.push(...String(child).split(/\s+/).filter(Boolean));
-    } else if (isValidElement(child)) {
-      words.push(child);
-    }
-  });
-
-  useScrollFx(ref, ({ isDesktop }) => {
-    const el = ref.current;
-    if (!el) return;
-
-    gsap.fromTo(
-      gsap.utils.toArray<HTMLElement>("[data-word]", el),
-      { opacity: 0.12, y: isDesktop ? 18 : 10 },
-      {
-        opacity: 1,
-        y: 0,
-        ease: "power2.out",
-        stagger: 0.14,
-        scrollTrigger: {
-          trigger: el,
-          start: "clamp(top 92%)",
-          end: "clamp(top 55%)",
-          scrub: 0.7,
-          invalidateOnRefresh: true,
-        },
-      }
-    );
-  });
-
-  return (
-    <Tag ref={ref} id={id} className={className}>
-      {words.map((word, i) => (
-        <Fragment key={i}>
-          {i > 0 ? " " : null}
-          <span data-word className="inline-block">
-            {word}
-          </span>
-        </Fragment>
-      ))}
-    </Tag>
-  );
-}
-
-/**
- * Big wordmark that tightens into place: each letter starts spread out to the
- * right (a transform-only stand-in for wide letter-spacing), lower and
- * transparent, and settles as the line enters. Screen readers get the plain
- * text. `suffix` is an extra trailing glyph, such as a colored dot.
- */
-export function LetterReveal({
-  text,
-  suffix,
-  className,
-}: {
-  text: string;
-  suffix?: ReactNode;
-  className?: string;
-}) {
-  const ref = useRef<HTMLParagraphElement>(null);
-
-  useScrollFx(ref, ({ isDesktop }) => {
-    const el = ref.current;
-    if (!el) return;
-    const spread = isDesktop ? 0.09 : 0.06;
-
-    gsap.fromTo(
-      gsap.utils.toArray<HTMLElement>("[data-letter]", el),
-      {
-        x: (i: number) => i * parseFloat(getComputedStyle(el).fontSize) * spread,
-        yPercent: 30,
-        opacity: 0,
-      },
-      {
-        x: 0,
-        yPercent: 0,
-        opacity: 1,
-        ease: "power2.out",
-        stagger: 0.05,
-        scrollTrigger: {
-          trigger: el,
-          start: "clamp(top 98%)",
-          end: "clamp(top 64%)",
-          scrub: 0.8,
-          invalidateOnRefresh: true,
-        },
-      }
-    );
-  });
-
-  return (
-    <p ref={ref} className={cn("whitespace-nowrap", className)}>
-      <span className="sr-only">{text}</span>
-      <span aria-hidden="true">
-        {Array.from(text).map((letter, i) => (
-          <span key={i} data-letter className="inline-block">
-            {letter === " " ? " " : letter}
-          </span>
-        ))}
-        {suffix ? (
-          <span data-letter className="inline-block">
-            {suffix}
-          </span>
-        ) : null}
-      </span>
-    </p>
   );
 }

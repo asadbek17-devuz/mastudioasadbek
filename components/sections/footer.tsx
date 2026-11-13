@@ -1,101 +1,117 @@
 "use client";
 
+import type { PointerEvent } from "react";
+import { BackdropMark } from "@/components/sections/footer-parts/backdrop-mark";
 import { BackToTop } from "@/components/sections/footer-parts/back-to-top";
 import { ArrowSwap } from "@/components/sections/shared/hover";
-import { LetterReveal } from "@/components/sections/shared/scroll-fx";
-import { linkTarget, socialIcons } from "@/components/sections/shared/social-icons";
-import { useData, useLocale, useT } from "@/lib/i18n";
+import { LogoMark } from "@/components/ui/logo";
+import { STUDIO_URL } from "@/lib/data";
+import { useData, useT } from "@/lib/i18n";
+import { cn } from "@/lib/utils";
 
-/** Footer links: 44px tall on touch screens, color shift + icon nudge on hover. */
-const linkClass =
-  "group inline-flex min-h-11 items-center gap-2 rounded-md text-sm text-cream-50/75 transition-colors duration-200 ease-ios hover:text-cream-50 focus-visible:ring-2 focus-visible:ring-accent-soft focus-visible:ring-offset-2 focus-visible:ring-offset-ink focus-visible:outline-none lg:min-h-8";
+const focusDark =
+  "focus-visible:ring-2 focus-visible:ring-accent-soft focus-visible:ring-offset-2 focus-visible:ring-offset-ink focus-visible:outline-none";
+
+/** Feeds the cursor position (-1..1) to the backdrop mark; mouse only, never with reduced motion. */
+function trackPointer(e: PointerEvent<HTMLDivElement>) {
+  if (e.pointerType !== "mouse") return;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const el = e.currentTarget;
+  const r = el.getBoundingClientRect();
+  el.style.setProperty(
+    "--mx",
+    (((e.clientX - r.left) / r.width) * 2 - 1).toFixed(3),
+  );
+  el.style.setProperty(
+    "--my",
+    (((e.clientY - r.top) / r.height) * 2 - 1).toFixed(3),
+  );
+}
+
+function resetPointer(e: PointerEvent<HTMLDivElement>) {
+  e.currentTarget.style.setProperty("--mx", "0");
+  e.currentTarget.style.setProperty("--my", "0");
+}
 
 export function Footer() {
   const year = new Date().getFullYear();
   const t = useT().footer;
-  const { locale } = useLocale();
   const { navItems, profile } = useData();
 
-  // Clearing the fixed bottom tab bar on phones is the header's job: it adds
-  // `body { padding-bottom: calc(88px + env(safe-area-inset-bottom)) }` below
-  // 768px. The footer only keeps a small gap of its own, so the two don't add up.
+  // Clearing the fixed bottom tab bar on phones is the header's job (body
+  // padding-bottom below 768px), so the footer only keeps its own small gap.
   return (
-    <footer className="mx-auto w-full max-w-6xl px-4 pb-4 sm:px-6">
-      <div className="relative overflow-hidden rounded-card bg-ink p-5 text-cream-50 shadow-lift sm:p-10">
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 sm:gap-10 lg:grid-cols-12">
-          <div className="sm:col-span-2 lg:col-span-6">
-            {/* GSAP: letters tighten, rise and fade in as the footer scrolls in. Keyed by
-                locale: the tween holds the letter nodes ("Asadbek" / "Асадбек"). */}
-            <LetterReveal
-              key={locale}
-              text={profile.name}
-              suffix={<span className="text-sage">.</span>}
-              className="font-heading text-[clamp(3rem,15vw,6rem)] leading-[0.95] font-semibold tracking-tighter"
-            />
-            <p className="mt-4 max-w-sm leading-relaxed text-pretty text-cream-50/70">
-              {t.tagline}
-            </p>
-          </div>
+    <footer className="mx-auto w-full max-w-6xl px-4 pb-4 sm:px-6 sm:pb-6">
+      <div
+        onPointerMove={trackPointer}
+        onPointerLeave={resetPointer}
+        className="relative isolate overflow-hidden rounded-card border border-ink bg-ink text-cream-50 shadow-soft"
+      >
+        <BackdropMark />
 
-          <nav aria-label={t.navAria} className="lg:col-span-3">
-            <h2 className="text-[13px] font-medium tracking-[0.16em] text-cream-50/60 uppercase">
-              {t.navigate}
-            </h2>
-            <ul className="mt-2 grid grid-cols-2 gap-x-3 min-[440px]:grid-cols-3 sm:grid-cols-2 lg:mt-4 lg:grid-cols-1 lg:gap-y-1">
-              {navItems.map(({ id, label, icon: Icon }) => (
-                <li key={id}>
-                  <a href={`#${id}`} className={linkClass}>
-                    <Icon
-                      className="size-4 text-sage transition-transform duration-300 ease-ios group-hover:-translate-y-px"
-                      aria-hidden="true"
-                    />
-                    {label}
-                  </a>
+        {/* Brand + CTA */}
+        <div className="flex flex-col gap-6 p-5 pb-4 sm:flex-row sm:items-center sm:justify-between sm:gap-10 sm:p-8 sm:pb-5 lg:p-10 lg:pb-6">
+          <div className="min-w-0">
+            <p className="inline-flex items-center gap-2.5">
+              <LogoMark className="h-5 w-auto shrink-0 text-sage" />
+              <span className="text-[13px] font-semibold tracking-[0.22em] text-cream-50 uppercase">
+                {profile.name}
+              </span>
+            </p>
+            <ul className="mt-4 flex flex-wrap gap-2">
+              {t.facts.map((fact) => (
+                <li
+                  key={fact}
+                  className="rounded-pill border border-cream-50/15 px-3 py-1 text-[13px] leading-5 whitespace-nowrap text-cream-50/75"
+                >
+                  {fact}
                 </li>
               ))}
             </ul>
-          </nav>
-
-          <div className="lg:col-span-3">
-            <h2 className="text-[13px] font-medium tracking-[0.16em] text-cream-50/60 uppercase">
-              {t.elsewhere}
-            </h2>
-            {/* Phones: a row of round 44px icon buttons (the names stay for screen
-                readers). From 640px up: the labelled list. */}
-            <ul className="mt-3 flex flex-wrap gap-2.5 sm:mt-2 sm:grid sm:grid-cols-2 sm:gap-x-3 sm:gap-y-0 lg:mt-4 lg:grid-cols-1 lg:gap-y-1">
-              {profile.socials.map((s) => {
-                const Icon = socialIcons[s.key];
-                return (
-                  <li key={s.key}>
-                    <a
-                      href={s.href}
-                      {...linkTarget(s.href)}
-                      className={`${linkClass} max-sm:size-11 max-sm:justify-center max-sm:rounded-full max-sm:border max-sm:border-cream-50/15 max-sm:bg-cream-50/5 max-sm:active:bg-cream-50/10`}
-                    >
-                      <Icon
-                        className="size-[18px] text-sage transition-transform duration-300 ease-ios group-hover:-translate-y-px sm:size-4"
-                        aria-hidden="true"
-                      />
-                      <span className="max-sm:sr-only">{s.label}</span>
-                      <ArrowSwap className="size-3.5 text-cream-50/40 transition-colors duration-200 group-hover:text-sage max-sm:hidden" />
-                    </a>
-                  </li>
-                );
-              })}
-              <li className="w-full min-w-0 sm:col-span-2 lg:col-span-1">
-                <a href={`mailto:${profile.email}`} className={`${linkClass} break-all`}>
-                  {profile.email}
-                </a>
-              </li>
-            </ul>
           </div>
+
+          <a
+            href={STUDIO_URL}
+            target="_blank"
+            rel="noopener"
+            className={cn(
+              "group inline-flex min-h-11 shrink-0 items-center justify-center gap-2 self-start rounded-pill bg-cream-50 px-5 py-2.5 text-sm font-medium text-ink transition-[background-color,scale] duration-300 ease-ios hover:bg-sage active:scale-[0.97] motion-reduce:transition-none sm:self-auto",
+              focusDark,
+            )}
+          >
+            {t.ctaLink}
+            <ArrowSwap />
+          </a>
         </div>
 
-        <div className="mt-8 flex flex-col-reverse gap-4 border-t border-cream-50/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-sm text-cream-50/60">
-            © {year} {profile.name}. {t.rights}
-          </p>
-          <BackToTop />
+        <div className="px-5 pb-5 sm:px-8 sm:pb-8 lg:px-10">
+          {/* In-page nav */}
+          <nav aria-label={t.navAria}>
+            {/* Phones: an even 3-column grid (two tidy rows) instead of a ragged wrap. */}
+            <ul className="-mx-2 grid grid-cols-[repeat(3,auto)] justify-between gap-x-1 sm:flex sm:flex-wrap sm:justify-start">
+              {navItems.map(({ id, label }) => (
+                  <li key={id}>
+                    <a
+                      href={`#${id}`}
+                      className={cn(
+                        "flex min-h-11 items-center rounded-pill px-2 text-sm whitespace-nowrap text-cream-50/70 transition-colors duration-200 ease-ios hover:text-cream-50 sm:px-3 lg:min-h-9",
+                        focusDark,
+                      )}
+                    >
+                      {label}
+                    </a>
+                  </li>
+                ))}
+            </ul>
+          </nav>
+
+          {/* Meta row */}
+          <div className="mt-4 flex items-center justify-between gap-4 border-t border-cream-50/10 pt-5 text-[13px] text-cream-50/50">
+            <p>
+              © {year} {profile.name}
+            </p>
+            <BackToTop />
+          </div>
         </div>
       </div>
     </footer>

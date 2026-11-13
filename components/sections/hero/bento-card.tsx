@@ -7,24 +7,28 @@ import { cardSurface, focusRing } from "@/components/sections/shared/hover";
 import { cardHover, cardTap, ease, fadeIn, softSpring } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
-/** Card entrance: fade, rise 16px, un-blur and settle from 98% on a soft spring. */
+/** Card entrance: fade, rise 16px and settle from 98% on a soft spring. */
 const cardEnter: Variants = {
-  hidden: { opacity: 0, y: 16, scale: 0.98, filter: "blur(6px)" },
+  hidden: { opacity: 0, y: 16, scale: 0.98 },
   show: {
     opacity: 1,
     y: 0,
     scale: 1,
-    filter: "blur(0px)",
     transition: {
       ...softSpring,
-      // Tweened: a spring could overshoot into a negative blur.
       opacity: { duration: 0.5, ease },
-      filter: { duration: 0.6, ease },
     },
   },
 };
 
 const hoverSpring = { type: "spring", stiffness: 320, damping: 24 } as const;
+
+/**
+ * The lift is a variant so the stationary entrance node can trigger it: if the
+ * surface listened for its own hover, lifting 3px would pull its bottom edge
+ * from under the pointer and the card would flicker up and down.
+ */
+const surfaceHover: Variants = { hover: cardHover };
 
 interface BentoCardProps {
   children: ReactNode;
@@ -65,14 +69,18 @@ export function BentoCard({
   );
 
   return (
-    <div data-drift={drift || undefined} className={cn("min-w-0 will-change-transform", className)}>
-      <motion.div variants={reduce ? fadeIn : cardEnter} className="h-full">
+    <div data-drift={drift || undefined} className={cn("min-w-0", className)}>
+      <motion.div
+        variants={reduce ? fadeIn : cardEnter}
+        whileHover={lift ? "hover" : undefined}
+        className="h-full"
+      >
         {href ? (
           <motion.a
             href={href}
             aria-label={ariaLabel}
             className={cn(surface, focusRing)}
-            whileHover={lift ? cardHover : undefined}
+            variants={surfaceHover}
             whileTap={lift ? cardTap : undefined}
             transition={hoverSpring}
           >
@@ -81,7 +89,7 @@ export function BentoCard({
         ) : (
           <motion.div
             className={surface}
-            whileHover={lift ? cardHover : undefined}
+            variants={surfaceHover}
             transition={hoverSpring}
           >
             {children}
@@ -89,29 +97,5 @@ export function BentoCard({
         )}
       </motion.div>
     </div>
-  );
-}
-
-/** 36px icon tile used on every card. `tone="dark"` is for the accent card. */
-export function IconTile({
-  children,
-  tone = "light",
-  className,
-}: {
-  children: ReactNode;
-  tone?: "light" | "dark";
-  className?: string;
-}) {
-  return (
-    <span
-      aria-hidden="true"
-      className={cn(
-        "grid size-9 shrink-0 place-items-center rounded-xl [&>svg]:size-[18px]",
-        tone === "dark" ? "bg-cream/12 text-cream" : "bg-cream-100 text-accent",
-        className
-      )}
-    >
-      {children}
-    </span>
   );
 }

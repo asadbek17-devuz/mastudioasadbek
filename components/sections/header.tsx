@@ -6,7 +6,8 @@ import { ArrowUpRight } from "lucide-react";
 
 import { useLoaderDone } from "@/components/sections/header/loader-signal";
 import { LanguageSwitcher } from "@/components/sections/header/language-switcher";
-import { navItems as baseNavItems, type SectionId } from "@/lib/data";
+import { LogoMark } from "@/components/ui/logo";
+import { navItems as baseNavItems, STUDIO_URL, type SectionId } from "@/lib/data";
 import { LOCALE_CHANGE_EVENT, useData, useT } from "@/lib/i18n";
 import { spring } from "@/lib/motion";
 import { cn } from "@/lib/utils";
@@ -247,12 +248,12 @@ export function Header() {
           transition={reduce ? { duration: 0.3 } : { ...enterSpring, delay: 0.15 }}
           data-compact={compact}
           className={cn(
-            // Every item is `--item` tall. At rest: 42px items + 2×6px padding + 2×1px border
-            // = 56px. From lg the pill has a minimum width and the nav flexes to fill it, so
+            // Every item is `--item` tall. Phones: 44px (touch target), a 58px pill. From md at
+            // rest: 42px items + 2×6px padding + 2×1px border = 56px. From lg the pill has a minimum width and the nav flexes to fill it, so
             // the items sit centred. `relative`: below md the language menu anchors to the
             // pill's right edge. Below md the pill spans the screen minus a 12px gutter each
             // side (capped at max-w-md) and never shrinks on scroll.
-            "group/pill pointer-events-auto relative flex w-[calc(100vw-24px)] max-w-md items-center gap-1.5 rounded-pill border border-line bg-cream-50/80 p-1.5 backdrop-blur-md backdrop-saturate-150 [--item:42px] md:w-max md:max-w-full lg:min-w-[760px]",
+            "group/pill pointer-events-auto relative flex w-[calc(100vw-24px)] max-w-md items-center gap-1.5 rounded-pill border border-line bg-cream-50/80 p-1.5 backdrop-blur-md backdrop-saturate-150 [--item:44px] md:w-max md:[--item:42px] md:max-w-full lg:min-w-[760px]",
             // Scrolled (md+): 36px items + 2×5px + 2×1px = 48px, tighter gaps, narrower
             // minimum, more opaque. Real sizes are transitioned (no scale), so text stays
             // sharp and the active pill, which is `inset-0` of its item, follows along.
@@ -275,13 +276,12 @@ export function Header() {
           >
             <span
               aria-hidden="true"
-              className="grid size-(--item) place-items-center rounded-pill bg-accent text-lg font-semibold leading-none tracking-tight text-cream-50 transition-[width,height,font-size] duration-300 ease-ios motion-reduce:transition-none md:group-data-[compact=true]/pill:text-base"
+              className="grid size-(--item) place-items-center rounded-pill bg-ink text-cream-50 transition-[width,height] duration-300 ease-ios motion-reduce:transition-none"
             >
-              {profile.name.charAt(0)}
+              <LogoMark className="h-[42%] w-auto" />
             </span>
-            <span aria-hidden="true" className="text-base font-semibold tracking-tight text-ink max-[339px]:hidden md:hidden lg:inline lg:text-[15px]">
-              {profile.name.toLowerCase()}
-              <span className="text-accent">.</span>
+            <span aria-hidden="true" className="text-[13px] font-semibold uppercase tracking-[0.22em] text-ink max-[339px]:hidden md:hidden lg:inline">
+              {profile.name}
             </span>
           </a>
 
@@ -303,6 +303,8 @@ export function Header() {
                           // en ~1090, ru ~1130, uz ~1175 of ~1240 available. 16px padding would put
                           // Uzbek at ~1230, so the roomier padding waits for 2xl.
                           "group/item relative isolate flex h-(--item) min-w-(--item) items-center justify-center rounded-pill px-3 text-sm font-medium 2xl:px-4",
+                          // Invisible pad: the item stays a 44px touch target when the pill shrinks.
+                          "after:absolute after:inset-x-0 after:-inset-y-1 after:content-['']",
                           "md:group-data-[compact=true]/pill:px-2.5 2xl:group-data-[compact=true]/pill:px-3.5",
                           "transition-[color,background-color,transform,height,min-width,padding] duration-300 ease-ios active:scale-95 motion-reduce:transition-none",
                           isActive ? "text-cream-50" : "text-ink-soft hover:bg-cream-100 hover:text-ink",
@@ -348,8 +350,9 @@ export function Header() {
           <LanguageSwitcher />
 
           <a
-            href="#contact"
-            onClick={(e) => onNavigate(e, "contact")}
+            href={STUDIO_URL}
+            target="_blank"
+            rel="noopener"
             className={cn(
               "group flex h-(--item) shrink-0 items-center justify-center gap-1.5 rounded-pill bg-ink pl-3.5 pr-3 text-sm font-medium whitespace-nowrap text-cream-50 min-[380px]:gap-2 min-[380px]:pl-4 min-[380px]:pr-3.5 md:pl-5 md:pr-4",
               "md:group-data-[compact=true]/pill:pl-4 md:group-data-[compact=true]/pill:pr-3.5",
@@ -397,7 +400,7 @@ export function Header() {
                       aria-current={isActive ? "location" : undefined}
                       title={label}
                       className={cn(
-                        // The bar is 64px tall (50px tabs + 2×6px padding + 2×1px border) and the seven
+                        // The bar is 64px tall (50px tabs + 2×6px padding + 2×1px border) and the six
                         // tabs share its width: 46px each at 360, 56px at 430. Never below 44px.
                         "group relative isolate grid h-[50px] w-full min-w-11 place-items-center rounded-pill",
                         "transition-colors duration-200 ease-ios motion-reduce:transition-none",

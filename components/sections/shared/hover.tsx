@@ -13,6 +13,9 @@ export const focusRing =
 export const cardSurface =
   "group rounded-card border border-line bg-cream-50 shadow-soft transition-[box-shadow,border-color] duration-300 ease-ios hover:border-ink/15 hover:shadow-lift";
 
+/** Same surface for a card that is not a link: no hover lift, no `group` effects. */
+export const cardStatic = "rounded-card border border-line bg-cream-50 shadow-soft";
+
 /**
  * "↗" that slides out to the top-right and back in from the bottom-left on
  * `group` hover. Clipped, so only one arrow is ever visible. Never rotates.

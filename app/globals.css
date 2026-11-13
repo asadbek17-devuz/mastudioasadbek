@@ -24,7 +24,7 @@
   /* Text */
   --color-ink: #16181a;
   --color-ink-soft: #3a3d40;
-  --color-muted: #6e6a62;
+  --color-muted: #66625a;
 
   /* Accents */
   --color-accent: #1f4d3f;
@@ -54,33 +54,8 @@
      Note: `accent` and `muted` are the brand tokens above, not shadcn's. */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
   --color-border: var(--border);
-  --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
 
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
@@ -97,33 +72,8 @@
 
   --background: #f5f0e6;
   --foreground: #16181a;
-  --card: #fbf8f2;
-  --card-foreground: #16181a;
-  --popover: #fbf8f2;
-  --popover-foreground: #16181a;
-  --primary: #1f4d3f;
-  --primary-foreground: #fbf8f2;
-  --secondary: #f0e9db;
-  --secondary-foreground: #16181a;
-  --muted-foreground: #6e6a62;
-  --accent-foreground: #fbf8f2;
-  --destructive: #b42318;
   --border: #e3daca;
-  --input: #e3daca;
   --ring: #1f4d3f;
-  --chart-1: #1f4d3f;
-  --chart-2: #1e3a5f;
-  --chart-3: #a8bfa9;
-  --chart-4: #3a3d40;
-  --chart-5: #dce8e1;
-  --sidebar: #fbf8f2;
-  --sidebar-foreground: #16181a;
-  --sidebar-primary: #1f4d3f;
-  --sidebar-primary-foreground: #fbf8f2;
-  --sidebar-accent: #f0e9db;
-  --sidebar-accent-foreground: #16181a;
-  --sidebar-border: #e3daca;
-  --sidebar-ring: #1f4d3f;
 }
 
 @layer base {
@@ -143,6 +93,24 @@
   section[id] {
     scroll-margin-top: 96px;
   }
+  /* Tailwind v4 keeps the default arrow on buttons: every clickable control gets the hand. */
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  [role="menuitem"],
+  [role="menuitemradio"],
+  [role="option"],
+  [role="tab"],
+  summary,
+  select,
+  label[for],
+  a[href] {
+    cursor: pointer;
+  }
+  button:disabled,
+  [role="button"][aria-disabled="true"],
+  select:disabled {
+    cursor: not-allowed;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -159,11 +127,26 @@
   }
 }
 
-/* Morph loader keyframes (components/ui/morph-loading.tsx) */
-@keyframes morph-0 {0%,100%{transform:translate(0,0) scale(1);border-radius:0%}25%{transform:translate(20px,-20px) scale(1.2);border-radius:50%}50%{transform:translate(40px,0) scale(.8);border-radius:25%}75%{transform:translate(20px,20px) scale(1.1);border-radius:75%}}
-@keyframes morph-1 {0%,100%{transform:translate(0,0) scale(1) rotate(0deg);border-radius:0%}25%{transform:translate(-20px,-20px) scale(1.3) rotate(90deg);border-radius:50%}50%{transform:translate(-40px,0) scale(.7) rotate(180deg);border-radius:25%}75%{transform:translate(-20px,20px) scale(1.2) rotate(270deg);border-radius:75%}}
-@keyframes morph-2 {0%,100%{transform:translate(0,0) scale(1);border-radius:0%}25%{transform:translate(-20px,20px) scale(.9);border-radius:100%}50%{transform:translate(0,40px) scale(1.4);border-radius:0%}75%{transform:translate(20px,20px) scale(.8);border-radius:50%}}
-@keyframes morph-3 {0%,100%{transform:translate(0,0) scale(1) rotate(0deg);border-radius:0%}25%{transform:translate(20px,20px) scale(1.1) rotate(-90deg);border-radius:25%}50%{transform:translate(0,-40px) scale(1.3) rotate(-180deg);border-radius:100%}75%{transform:translate(-20px,-20px) scale(.9) rotate(-270deg);border-radius:75%}}
+/*
+ * Loader failsafe. The intro loader (components/sections/loader.tsx) is removed by JS.
+ * If the script never runs or hydration fails, these delayed animations hide the overlay
+ * and release the scroll lock, so the page is never stuck blank. In the normal flow the
+ * loader is gone (about 4s at most) before the delay ends, so they never play.
+ */
+@keyframes loader-failsafe-hide {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+@keyframes loader-failsafe-unlock {
+  to {
+    overflow: auto;
+  }
+}
+#site-loader {
+  animation: loader-failsafe-hide 0.3s linear 5s forwards;
+}
 
 /*
  * Accent highlight: a sage marker (45%) under accent words (headings, hero). Sage reads

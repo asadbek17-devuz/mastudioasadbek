@@ -3,24 +3,19 @@
 import { useMemo } from "react";
 
 import * as base from "@/lib/data";
-import type { Locale } from "@/lib/i18n/config";
-import { getDictionary } from "@/lib/i18n/dictionaries";
-import { useLocale } from "@/lib/i18n/provider";
+import { useT } from "@/lib/i18n/provider";
+import type { Dictionary } from "@/lib/i18n/types";
 
 /**
  * `lib/data` (hrefs, images, icons, numbers, tech names) merged with the text of one
  * locale. Every object keeps its original fields and shape; text fields are replaced
  * with the translation and a few `*Label` fields are added:
  *
- * - profile: + `city`, `country`
  * - stack: `title` is translated, so key layout maps by `category.id`;
  *   items get `levelLabel` (keep `level` for styling)
- * - startups: + `statusLabel` (keep `status` for styling); `period` is localized
- * - journey: the upcoming step's `year` is localized
+ * - journey: the upcoming step's `year` pill is localized
  */
-export function getData(locale: Locale) {
-  const t = getDictionary(locale);
-
+export function getData(t: Dictionary) {
   return {
     profile: { ...base.profile, ...t.profile },
 
@@ -48,18 +43,12 @@ export function getData(locale: Locale) {
     startups: base.startups.map((startup) => ({
       ...startup,
       ...t.startups.items[startup.slug],
-      period: `${startup.startYear} — ${startup.endYear ?? t.startups.present}`,
-      statusLabel: t.startups.statuses[startup.status],
-      metrics: startup.metrics.map((m) => ({ ...m, label: t.metrics[m.id] })),
     })),
 
     journey: base.journey.map((milestone) => ({
       ...milestone,
       ...t.journey.items[milestone.id],
       year: milestone.upcoming ? t.journey.nextYear : milestone.year,
-      metric: milestone.metric
-        ? { ...milestone.metric, label: t.metrics[milestone.metric.id] }
-        : undefined,
     })),
 
     navItems: base.navItems.map((item) => ({ ...item, label: t.nav.labels[item.id] })),
@@ -76,10 +65,10 @@ export type LocalizedMilestone = LocalizedData["journey"][number];
 export type LocalizedNavItem = LocalizedData["navItems"][number];
 
 /**
- * Localized content for the current locale, memoized per locale:
+ * Localized content for the current locale, memoized per dictionary:
  * `const { profile, stats, about, projects, stack, startups, journey, navItems } = useData();`
  */
 export function useData(): LocalizedData {
-  const { locale } = useLocale();
-  return useMemo(() => getData(locale), [locale]);
+  const t = useT();
+  return useMemo(() => getData(t), [t]);
 }

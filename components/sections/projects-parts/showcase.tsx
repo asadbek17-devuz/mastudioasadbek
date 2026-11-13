@@ -49,8 +49,8 @@ const detailVariants: Variants = {
   exit: { opacity: 0, transition: { duration: 0.14 } },
 };
 const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 12, filter: "blur(4px)" },
-  show: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.55, ease } },
+  hidden: { opacity: 0, y: 12 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.55, ease } },
 };
 
 const FINE_POINTER = "(hover: hover) and (pointer: fine)";
@@ -96,6 +96,7 @@ function Detail({
   id,
 }: Pick<PanelProps, "project" | "index" | "count" | "pointerX" | "pointerY" | "animated"> & { id: string }) {
   const t = useT();
+  const { href } = project;
   const tilt = { stiffness: 120, damping: 18, mass: 0.6 };
   const x = useSpring(useTransform(pointerX, (v) => v * 8), tilt);
   const y = useSpring(useTransform(pointerY, (v) => v * 8), tilt);
@@ -114,13 +115,16 @@ function Detail({
     >
       {/* Mouse-only shortcut: the whole panel opens the project. Keyboard and
           screen-reader users get the real "View project" link below. */}
-      <a
-        href={project.href}
-        {...linkTarget(project.href)}
-        aria-hidden="true"
-        tabIndex={-1}
-        className="pointer-events-auto absolute inset-0"
-      />
+      {href ? (
+        <a
+          href={href}
+          {...linkTarget(href)}
+          aria-hidden="true"
+          tabIndex={-1}
+          data-bubble-zone=""
+          className="pointer-events-auto absolute inset-0"
+        />
+      ) : null}
 
       <motion.div
         variants={itemVariants}
@@ -140,7 +144,7 @@ function Detail({
         </span>
 
         <motion.div
-          className="absolute top-10 -right-8 w-[70%] will-change-transform"
+          className="absolute top-10 -right-8 w-[70%]"
           style={animated ? { x, y, rotateX, rotateY, rotate: -2 } : { rotate: -2 }}
         >
           <BrowserFrame address={addressOf(project)} className="shadow-[0_30px_60px_-28px_rgb(22_24_26/0.45)]">
@@ -184,9 +188,10 @@ function Detail({
         </motion.ul>
 
         <motion.div variants={itemVariants} className="mt-auto flex items-center gap-2 pt-3">
+          {href ? (
           <a
-            href={project.href}
-            {...linkTarget(project.href)}
+            href={href}
+            {...linkTarget(href)}
             data-no-bubble
             aria-label={`${t.projects.viewProject}: ${project.title}`}
             className={cn(
@@ -197,6 +202,7 @@ function Detail({
             {t.projects.viewProject}
             <ArrowSwap />
           </a>
+          ) : null}
           {project.repo ? (
             <a
               href={project.repo}
@@ -273,6 +279,7 @@ function Panel({
           type="button"
           aria-expanded={active}
           aria-controls={detailId}
+          data-bubble-zone=""
           aria-label={format(t.projects.itemAria, { n: index + 1, total: count, title: project.title })}
           onFocus={onActivate}
           onClick={onActivate}
@@ -330,11 +337,12 @@ export function Showcase({ projects, className }: ShowcaseProps) {
   const reduce = useReducedMotion();
   const finePointer = useFinePointer();
   const animated = !reduce;
-  const withBubble = animated && finePointer;
   const count = projects.length;
   const baseId = useId();
 
   const [active, setActive] = useState(0);
+  // The "View" cursor bubble only makes sense over a project that opens somewhere.
+  const withBubble = animated && finePointer && Boolean(projects[active]?.href);
   const [bubble, setBubble] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const rowRef = useRef<HTMLDivElement>(null);
@@ -428,7 +436,7 @@ export function Showcase({ projects, className }: ShowcaseProps) {
           onMouseEnter={(event) => follow(event, true)}
           onMouseMove={(event) => follow(event)}
           onMouseLeave={leave}
-          className={cn("@container flex h-[560px]", withBubble && "cursor-none")}
+          className={cn("@container flex h-[560px]", withBubble && "cursor-none [&_[data-bubble-zone]]:cursor-none")}
           style={{ gap: GAP }}
         >
           {projects.map((project, i) => (

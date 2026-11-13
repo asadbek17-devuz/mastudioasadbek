@@ -1,152 +1,135 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { AppWindow, Boxes, Rocket } from "lucide-react";
 import { DotPattern } from "@/components/ui/dot-pattern";
+import { LogoMark } from "@/components/ui/logo";
 import { Reveal } from "@/components/ui/reveal";
 import { SectionHeading } from "@/components/ui/section-heading";
-import { ArrowButton, ArrowSwap, cardSurface, focusRing } from "@/components/sections/shared/hover";
+import { ArrowSwap, focusRing } from "@/components/sections/shared/hover";
 import { Parallax, ScrubScale } from "@/components/sections/shared/scroll-fx";
 import { linkTarget } from "@/components/sections/shared/social-icons";
-import { Stagger } from "@/components/sections/shared/stagger";
-import { CountValue } from "@/components/sections/startups-parts/count-value";
-import { StatusBadge } from "@/components/sections/startups-parts/status-badge";
-import { format, useData, useT, type LocalizedStartup } from "@/lib/i18n";
-import { cardHover, cardTap, spring } from "@/lib/motion";
+import { STUDIO_COFOUNDER } from "@/lib/data";
+import { format, useData, useT } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
-function HeroStartup({ startup }: { startup: LocalizedStartup }) {
-  const t = useT();
-  return (
-    <Reveal inherit className="flex min-w-0 sm:col-span-2 lg:col-span-7 lg:row-span-2">
-      {/* GSAP: the card scales 0.96 -> 1 as it enters, the dots drift behind the copy. */}
-      <ScrubScale from={0.96} className="flex w-full min-w-0">
-        <article className="relative isolate flex w-full flex-col overflow-hidden rounded-card bg-accent p-5 text-cream-50 shadow-lift sm:p-8">
-          <Parallax amount={0.14} className="pointer-events-none -z-10">
-            <DotPattern
-              width={18}
-              height={18}
-              cr={0.9}
-              className="fill-cream-50/15 [mask-image:radial-gradient(ellipse_at_top_right,black,transparent_70%)] md:fill-cream-50/15"
-            />
-          </Parallax>
+/** What the studio does. Text for each tile comes from `t.startups.facts[id]`. */
+const factTiles = [
+  { id: "webApps", icon: AppWindow },
+  { id: "products", icon: Boxes },
+  { id: "mvp", icon: Rocket },
+] as const;
 
-          <div className="flex flex-wrap items-center gap-3">
-            <StatusBadge status={startup.status} label={startup.statusLabel} />
-            <span className="text-sm text-cream-50/70">{startup.period}</span>
-          </div>
-
-          <h3 className="mt-5 font-heading text-[clamp(1.75rem,1.4rem+1.6vw,2.25rem)] leading-tight font-semibold tracking-tight sm:mt-6">
-            {startup.name}
-          </h3>
-          <p className="mt-1.5 text-base font-medium tracking-tight text-sage sm:text-lg">
-            {startup.role}
-          </p>
-          <p className="mt-4 max-w-xl leading-relaxed text-pretty text-cream-50/85">
-            {startup.description}
-          </p>
-
-          {/* Phones: two short stats side by side, an odd last one (the long
-              "hired after graduation" label) gets a full-width row of its own. */}
-          <dl className="mt-6 grid grid-cols-2 gap-2.5 sm:mt-8 sm:grid-cols-3 sm:gap-3 lg:mt-auto lg:pt-10">
-            {startup.metrics.map((m, i) => (
-              <div
-                key={m.id}
-                className={cn(
-                  "flex min-w-0 flex-col-reverse justify-end gap-1.5 rounded-2xl border border-cream-50/15 bg-cream-50/5 p-4",
-                  i === startup.metrics.length - 1 &&
-                    i % 2 === 0 &&
-                    "max-sm:col-span-2 max-sm:flex-row-reverse max-sm:items-center max-sm:justify-between max-sm:gap-4"
-                )}
-              >
-                <dt className="text-[13px] leading-snug break-words text-cream-50/70 sm:text-sm">{m.label}</dt>
-                <dd className="font-heading text-[clamp(1.875rem,0.9rem+2.8vw,3rem)] leading-none font-bold tracking-tight tabular-nums">
-                  <CountValue value={m.value} />
-                </dd>
-              </div>
-            ))}
-          </dl>
-
-          <a
-            href={startup.href}
-            {...linkTarget(startup.href)}
-            className={cn(
-              "group mt-6 inline-flex min-h-11 w-fit items-center gap-2 rounded-pill bg-cream-50 px-5 py-2.5 text-sm font-medium text-accent shadow-soft transition-[background-color,box-shadow,scale] duration-300 ease-ios hover:bg-cream hover:shadow-lift active:scale-[0.97]",
-              focusRing,
-              "focus-visible:ring-cream-50 focus-visible:ring-offset-accent"
-            )}
-          >
-            {format(t.startups.visit, { name: startup.name })}
-            <ArrowSwap />
-          </a>
-        </article>
-      </ScrubScale>
-    </Reveal>
-  );
-}
-
-function StartupCard({ startup }: { startup: LocalizedStartup }) {
-  const reduce = useReducedMotion();
-  return (
-    <Reveal inherit className="flex min-w-0 lg:col-span-5">
-      <motion.a
-        href={startup.href}
-        {...linkTarget(startup.href)}
-        whileHover={reduce ? undefined : cardHover}
-        whileTap={reduce ? undefined : cardTap}
-        transition={spring}
-        className={cn("flex w-full min-w-0 flex-col gap-3.5 p-5 sm:gap-4 sm:p-6", cardSurface, focusRing)}
-      >
-        <div className="flex items-start justify-between gap-2 sm:gap-3">
-          <StatusBadge status={startup.status} label={startup.statusLabel} />
-          <ArrowButton />
-        </div>
-
-        <div className="min-w-0">
-          <h3 className="font-heading text-xl font-semibold tracking-tight text-ink">
-            {startup.name}
-          </h3>
-          <p className="mt-0.5 text-sm text-muted">
-            {startup.role} · {startup.period}
-          </p>
-        </div>
-
-        <p className="text-[15px] leading-relaxed text-pretty text-ink-soft sm:text-sm">
-          {startup.description}
-        </p>
-
-        <dl className="mt-auto grid grid-cols-2 gap-3 border-t border-line pt-4 sm:flex sm:flex-wrap sm:gap-x-6 sm:gap-y-2">
-          {startup.metrics.map((m) => (
-            <div key={m.id} className="flex min-w-0 flex-col-reverse gap-1">
-              <dt className="text-[13px] leading-snug text-muted">{m.label}</dt>
-              <dd className="font-heading text-2xl leading-none font-bold tracking-tight text-ink tabular-nums">
-                <CountValue value={m.value} />
-              </dd>
-            </div>
-          ))}
-        </dl>
-      </motion.a>
-    </Reveal>
-  );
-}
-
+/**
+ * One startup, one full-width feature card.
+ * - < 1024: a single column: copy, founders, link, then the fact tiles.
+ * - lg+: copy on the left (7/12), the fact tiles stacked on the right (5/12) and stretched
+ *   to the height of the copy, so neither column ends in empty space.
+ */
 export function Startups() {
   const t = useT();
-  const { startups } = useData();
-  const [lead, ...others] = startups;
+  const { startups, profile } = useData();
+  const startup = startups[0];
+  const founders = [profile.name, STUDIO_COFOUNDER];
 
   return (
-    <section id="startups" className="py-14 sm:py-28">
+    <section id="startups" aria-labelledby="startups-heading" className="py-14 sm:py-28">
       <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
-        <SectionHeading
-          {...t.startups.heading}
-        />
+        <SectionHeading id="startups-heading" {...t.startups.heading} />
 
-        <Stagger className="mt-10 grid grid-cols-1 gap-3 sm:mt-16 sm:grid-cols-2 sm:gap-5 lg:grid-cols-12">
-          {lead ? <HeroStartup startup={lead} /> : null}
-          {others.map((s) => (
-            <StartupCard key={s.slug} startup={s} />
-          ))}
-        </Stagger>
+        {startup ? (
+          <Reveal className="mt-10 min-w-0 sm:mt-16">
+            {/* GSAP: the card scales 0.96 -> 1 as it enters, the dots drift behind the copy. */}
+            <ScrubScale from={0.96} className="w-full min-w-0">
+              <article className="relative isolate grid w-full gap-8 overflow-hidden rounded-card bg-accent p-5 text-cream-50 shadow-lift sm:p-8 lg:grid-cols-12 lg:gap-10 lg:p-10">
+                <Parallax amount={0.14} className="pointer-events-none -z-10">
+                  <DotPattern
+                    width={18}
+                    height={18}
+                    cr={0.9}
+                    className="fill-cream-50/15 [mask-image:radial-gradient(ellipse_at_top_right,black,transparent_70%)] md:fill-cream-50/15"
+                  />
+                </Parallax>
+                {/* Brand mark as a quiet watermark, cropped by the bottom-left corner. */}
+                <div aria-hidden="true" className="pointer-events-none absolute -bottom-16 -left-10 -z-10">
+                  <LogoMark className="h-56 w-auto text-cream-50/[0.06] sm:h-72" />
+                </div>
+
+                <div className="flex min-w-0 flex-col lg:col-span-7">
+                  <p className="text-sm font-medium tracking-tight text-sage sm:text-base">{startup.role}</p>
+                  <h3 className="mt-2 font-heading text-[clamp(2rem,1.5rem+2.4vw,3.25rem)] leading-none font-semibold tracking-tight">
+                    {startup.name}
+                  </h3>
+                  <p className="mt-5 max-w-xl leading-relaxed text-pretty text-cream-50/85 sm:text-lg sm:leading-relaxed">
+                    {startup.description}
+                  </p>
+
+                  <dl className="mt-8 sm:mt-10">
+                    <dt className="text-[13px] font-medium tracking-[0.12em] text-cream-50/60 uppercase">
+                      {t.startups.foundersLabel}
+                    </dt>
+                    <dd className="mt-2.5">
+                      <ul className="flex flex-col items-start gap-2">
+                        {founders.map((name) => (
+                          <li
+                            key={name}
+                            className="inline-flex max-w-full min-w-0 items-center gap-2 rounded-pill border border-cream-50/15 bg-cream-50/5 py-1 pr-3.5 pl-1 text-sm font-medium"
+                          >
+                            <span
+                              aria-hidden="true"
+                              className="grid size-7 shrink-0 place-items-center rounded-full bg-cream-50 font-heading text-[13px] font-semibold text-accent"
+                            >
+                              {name.charAt(0)}
+                            </span>
+                            <span className="truncate">{name}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </dd>
+                  </dl>
+
+                  {startup.href ? (
+                    <a
+                      href={startup.href}
+                      {...linkTarget(startup.href)}
+                      className={cn(
+                        "group mt-8 inline-flex min-h-11 w-fit shrink-0 items-center gap-2 rounded-pill bg-cream-50 px-5 py-2.5 text-sm font-medium text-accent shadow-soft transition-[background-color,box-shadow,scale] duration-300 ease-ios hover:bg-cream hover:shadow-lift active:scale-[0.97] sm:mt-10",
+                        focusRing,
+                        "focus-visible:ring-cream-50 focus-visible:ring-offset-accent"
+                      )}
+                    >
+                      {format(t.startups.visit, { name: startup.name })}
+                      <ArrowSwap />
+                    </a>
+                  ) : null}
+                </div>
+
+                <div className="flex min-w-0 flex-col lg:col-span-5">
+                  <p className="text-[13px] font-medium tracking-[0.12em] text-cream-50/60 uppercase">
+                    {t.startups.factsLabel}
+                  </p>
+                  <ul className="mt-3 grid flex-1 gap-2.5 sm:grid-cols-3 sm:gap-3 lg:grid-cols-1 lg:grid-rows-3">
+                    {factTiles.map(({ id, icon: Icon }) => (
+                      <li
+                        key={id}
+                        className="flex min-w-0 items-start gap-3 rounded-2xl border border-cream-50/15 bg-cream-50/5 p-4 sm:flex-col lg:flex-row lg:items-center lg:px-5"
+                      >
+                        <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-cream-50/10 text-sage">
+                          <Icon className="size-4" aria-hidden="true" strokeWidth={1.75} />
+                        </span>
+                        <span className="min-w-0">
+                          <span className="block text-base leading-6 font-semibold">{t.startups.facts[id].title}</span>
+                          <span className="mt-0.5 block text-sm leading-snug text-pretty text-cream-50/70">
+                            {t.startups.facts[id].text}
+                          </span>
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </article>
+            </ScrubScale>
+          </Reveal>
+        ) : null}
       </div>
     </section>
   );

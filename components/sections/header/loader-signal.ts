@@ -16,28 +16,22 @@ export const LOADER_DONE_EVENT = "loader:done";
 const FALLBACK_MS = 3500;
 
 let forced = false;
+/** Survives a client-side language switch, which re-renders <html> and can drop the data attribute. */
+let done = false;
 
 export function isLoaderDone(): boolean {
   if (typeof document === "undefined") return false;
-  return forced || document.documentElement.dataset.loaded === "true";
+  return done || forced || document.documentElement.dataset.loaded === "true";
 }
 
 export function markLoaderDone(): void {
   if (typeof document === "undefined") return;
-  if (document.documentElement.dataset.loaded === "true") return;
+  if (done && document.documentElement.dataset.loaded === "true") return;
+  const first = !done;
+  done = true;
   document.documentElement.dataset.loaded = "true";
+  if (!first) return;
   window.dispatchEvent(new Event(LOADER_DONE_EVENT));
-}
-
-/** Runs `callback` once the loader is done (immediately if it already is). Returns a cleanup. */
-export function onLoaderDone(callback: () => void): () => void {
-  if (isLoaderDone()) {
-    callback();
-    return () => {};
-  }
-  const handler = () => callback();
-  window.addEventListener(LOADER_DONE_EVENT, handler, { once: true });
-  return () => window.removeEventListener(LOADER_DONE_EVENT, handler);
 }
 
 function subscribe(notify: () => void): () => void {

@@ -14,6 +14,8 @@ interface SnapCarouselProps {
   children: ReactNode;
   /** Extra classes for the outer wrapper (it is `display: contents` from 640px up). */
   className?: string;
+  /** Element of the scrolling row. Use `ol` / `ul` when the children are `<li>`. */
+  as?: "div" | "ol" | "ul";
 }
 
 /**
@@ -28,7 +30,8 @@ interface SnapCarouselProps {
  * - `touch-action: pan-x pan-y` keeps vertical page scrolling alive when the
  *   swipe starts on a card.
  */
-export function SnapCarousel({ children, className }: SnapCarouselProps) {
+export function SnapCarousel({ children, className, as = "div" }: SnapCarouselProps) {
+  const Row = as as "div";
   const ref = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
   const count = Children.count(children);
@@ -72,13 +75,13 @@ export function SnapCarousel({ children, className }: SnapCarouselProps) {
 
   return (
     <div className={cn("min-w-0 sm:contents", className)}>
-      <div
+      <Row
         ref={ref}
         data-carousel
         className="-mx-4 -my-4 flex touch-pan-x touch-pan-y snap-x snap-mandatory scroll-px-4 gap-3 overflow-x-auto overflow-y-hidden overscroll-x-contain px-4 py-4 [scrollbar-width:none] sm:contents [&::-webkit-scrollbar]:hidden"
       >
         {children}
-      </div>
+      </Row>
       {count > 1 ? (
         <div aria-hidden="true" className="mt-4 flex items-center justify-center gap-1.5 sm:hidden">
           {Array.from({ length: count }, (_, i) => (

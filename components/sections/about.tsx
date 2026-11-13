@@ -2,36 +2,28 @@
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
-  BookOpen,
+  Building2,
   Code2,
   Compass,
-  GraduationCap,
   Sparkles,
-  Users,
-  Zap,
+  Terminal,
   type LucideIcon,
 } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { Lift, LiftGroup } from "@/components/sections/shared/scroll-fx";
+import { LogoMark } from "@/components/ui/logo";
 import { Reveal } from "@/components/ui/reveal";
 import { SectionHeading } from "@/components/ui/section-heading";
 import type { HighlightId } from "@/lib/data";
 import { format, useData, useT } from "@/lib/i18n";
-import { cardHover, cardTap, ease, reveal, spring, stagger } from "@/lib/motion";
+import { ease, reveal, stagger } from "@/lib/motion";
 import { cn } from "@/lib/utils";
-
-const highlightIcons: Record<HighlightId, LucideIcon> = {
-  product: Sparkles,
-  code: Code2,
-  teacher: Users,
-  delivery: Zap,
-};
 
 /** Text for each row comes from `t.about.currently[id]`. */
 const currentlyRows = [
-  { id: "academy", icon: GraduationCap },
-  { id: "clients", icon: Code2 },
-  { id: "learning", icon: BookOpen },
+  { id: "studio", icon: Building2 },
+  { id: "fullstack", icon: Code2 },
+  { id: "linux", icon: Terminal },
 ] as const;
 
 interface CardProps {
@@ -44,31 +36,27 @@ interface CardProps {
 
 /**
  * Bento card: staggered reveal from the grid (Framer, outer element), a few px
- * of scrubbed scroll drift on desktop (GSAP, middle element), spring lift on
- * hover and press-in on tap (Framer, inner element).
+ * of scrubbed scroll drift on desktop (GSAP, middle element). The card itself is
+ * static content, so it has no hover or press feedback.
  */
 function Card({ children, className, innerClassName, lift = 0 }: CardProps) {
-  const reduce = useReducedMotion();
   return (
     <Reveal inherit className={cn("min-w-0", className)}>
       <Lift amount={lift} className="h-full">
-        <motion.article
-          whileHover={reduce ? undefined : cardHover}
-          whileTap={reduce ? undefined : cardTap}
-          transition={spring}
+        <article
           className={cn(
-            "relative h-full overflow-hidden rounded-card border border-line bg-cream-50 p-5 shadow-soft transition-shadow duration-300 ease-ios hover:shadow-lift sm:p-7",
+            "relative h-full overflow-hidden rounded-card border border-line bg-cream-50 p-5 shadow-soft sm:p-7",
             innerClassName
           )}
         >
           {children}
-        </motion.article>
+        </article>
       </Lift>
     </Reveal>
   );
 }
 
-function CardLabel({ icon: Icon, children, className }: { icon: LucideIcon; children: ReactNode; className?: string }) {
+function CardLabel({ icon: Icon, children, className }: { icon?: LucideIcon; children: ReactNode; className?: string }) {
   return (
     <p
       className={cn(
@@ -76,7 +64,7 @@ function CardLabel({ icon: Icon, children, className }: { icon: LucideIcon; chil
         className
       )}
     >
-      <Icon className="size-3.5 shrink-0" aria-hidden="true" />
+      {Icon ? <Icon className="size-3.5 shrink-0" aria-hidden="true" /> : null}
       {children}
     </p>
   );
@@ -89,7 +77,7 @@ interface Highlight {
 }
 
 /**
- * Phone layout of "what I bring": four compact tiles (icon + short title) in a 2x2,
+ * Phone layout of "what I bring": four compact title tiles in a 2x2,
  * and the description of the picked one below at full width, so no paragraph is ever
  * squeezed into half a screen. Below 640px only.
  */
@@ -103,7 +91,6 @@ function HighlightTiles({ highlights, className }: { highlights: Highlight[]; cl
     <div className={className}>
       <ul className="grid grid-cols-2 gap-2.5">
         {highlights.map((h) => {
-          const Icon = highlightIcons[h.id];
           const active = h.id === current.id;
           return (
             <li key={h.id} className="min-w-0">
@@ -112,21 +99,12 @@ function HighlightTiles({ highlights, className }: { highlights: Highlight[]; cl
                 aria-pressed={active}
                 onClick={() => setPicked(h.id)}
                 className={cn(
-                  "flex h-full min-h-24 w-full flex-col items-start gap-2.5 rounded-2xl border p-3 text-left",
+                  "flex h-full min-h-16 w-full items-start rounded-2xl border p-3 text-left",
                   "transition-[background-color,border-color,scale] duration-300 ease-ios active:scale-[0.97] motion-reduce:transition-none",
                   "outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-cream-50",
                   active ? "border-accent/30 bg-accent-soft" : "border-line bg-cream"
                 )}
               >
-                <span
-                  aria-hidden="true"
-                  className={cn(
-                    "grid size-9 shrink-0 place-items-center rounded-xl transition-colors duration-300 ease-ios",
-                    active ? "bg-accent text-cream-50" : "bg-cream-50 text-accent-2"
-                  )}
-                >
-                  <Icon className="size-4" />
-                </span>
                 <span className="text-sm leading-snug font-semibold text-ink">{h.title}</span>
               </button>
             </li>
@@ -163,12 +141,13 @@ export function About() {
   const t = useT();
   const { about, profile, startups } = useData();
   const [lead, ...rest] = about.paragraphs;
-  const academyName = startups[0]?.name ?? "";
+  const studioName = startups[0]?.name ?? "";
 
   return (
-    <section id="about" className="relative py-14 sm:py-28">
+    <section id="about" aria-labelledby="about-heading" className="relative py-14 sm:py-28">
       <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
         <SectionHeading
+          id="about-heading"
           {...t.about.heading}
         />
 
@@ -201,7 +180,7 @@ export function About() {
                 ))}
               </div>
               <p className="mt-auto inline-flex items-center gap-3 pt-8 text-sm font-medium text-ink">
-                <span aria-hidden="true" className="h-px w-8 bg-accent" />
+                <LogoMark className="h-3.5 w-auto shrink-0 text-accent" />
                 <span>
                   {profile.name}
                   <span className="font-normal text-muted"> · {profile.role}</span>
@@ -211,33 +190,29 @@ export function About() {
 
             {/* Highlights: tap-to-read 2x2 tiles on phones, the full list with descriptions from 640px */}
             <Card lift={-6} className="col-span-2 lg:order-4 lg:col-span-12">
-              <CardLabel icon={Zap}>{t.about.labels.whatIBring}</CardLabel>
+              <CardLabel>{t.about.labels.whatIBring}</CardLabel>
               <HighlightTiles highlights={about.highlights} className="mt-4 sm:hidden" />
               <ul className="mt-6 hidden grid-cols-2 gap-x-8 gap-y-6 sm:grid lg:grid-cols-4 lg:gap-x-6">
-                {about.highlights.map((h) => {
-                  const Icon = highlightIcons[h.id];
-                  return (
-                    <li key={h.id} className="group flex min-w-0 flex-col gap-2.5 sm:flex-row sm:gap-4 lg:flex-col lg:gap-3.5">
-                      <span className="grid size-9 shrink-0 place-items-center rounded-xl border border-line bg-cream text-accent-2 transition-colors duration-300 ease-ios group-hover:border-accent/30 group-hover:bg-accent-soft group-hover:text-accent sm:size-11 sm:rounded-2xl">
-                        <Icon className="size-4 sm:size-5" aria-hidden="true" />
-                      </span>
-                      <span className="min-w-0">
-                        <span className="block text-[15px] font-semibold text-ink sm:text-base">{h.title}</span>
-                        <span className="mt-1 block text-[13px] leading-relaxed text-ink-soft sm:text-sm">
-                          {h.description}
-                        </span>
-                      </span>
-                    </li>
-                  );
-                })}
+                {about.highlights.map((h) => (
+                  <li key={h.id} className="min-w-0">
+                    <span className="block text-[15px] font-semibold text-ink sm:text-base">{h.title}</span>
+                    <span className="mt-1 block text-[13px] leading-relaxed text-ink-soft sm:text-sm">
+                      {h.description}
+                    </span>
+                  </li>
+                ))}
               </ul>
             </Card>
             {/* Values: full width on phones, pairs with "currently" from 640px, sits under it on desktop */}
             <Card
               lift={12}
               className="col-span-2 sm:col-span-1 lg:order-3 lg:col-span-5"
-              innerClassName="border-ink bg-ink text-cream-50"
+              innerClassName="isolate border-ink bg-ink text-cream-50"
             >
+              {/* Brand mark as a quiet watermark, cropped by the card's corner. */}
+              <div aria-hidden="true" className="pointer-events-none absolute -right-6 -bottom-12 -z-10">
+                <LogoMark className="h-44 w-auto text-cream-50/[0.06] sm:h-52" />
+              </div>
               <p className="text-[13px] font-medium tracking-[0.12em] text-cream-50/60 uppercase sm:tracking-[0.16em]">
                 {t.about.labels.howIWork}
               </p>
@@ -269,7 +244,7 @@ export function About() {
                     </span>
                     <span className="min-w-0">
                       <span className="block text-base leading-6 font-semibold text-pretty text-ink">
-                        {format(t.about.currently[id].label, { name: academyName })}
+                        {format(t.about.currently[id].label, { name: studioName })}
                       </span>
                       <span className="mt-0.5 block text-sm text-pretty text-muted sm:mt-0">{t.about.currently[id].detail}</span>
                     </span>
