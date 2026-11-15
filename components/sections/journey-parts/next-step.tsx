@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 import { ArrowButton, focusRing } from "@/components/sections/shared/hover";
 import { railX, rowGrid, YearBadge } from "@/components/sections/journey-parts/milestone";
 import { STUDIO_URL, type JourneyMilestone } from "@/lib/data";

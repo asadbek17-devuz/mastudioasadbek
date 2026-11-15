@@ -1,6 +1,6 @@
 "use client";
 
-import { AppWindow, Boxes, Rocket } from "lucide-react";
+import { AppWindow, ArrowUpRight, Boxes, Rocket } from "lucide-react";
 import { DotPattern } from "@/components/ui/dot-pattern";
 import { LogoMark } from "@/components/ui/logo";
 import { Reveal } from "@/components/ui/reveal";
@@ -8,7 +8,7 @@ import { SectionHeading } from "@/components/ui/section-heading";
 import { ArrowSwap, focusRing } from "@/components/sections/shared/hover";
 import { Parallax, ScrubScale } from "@/components/sections/shared/scroll-fx";
 import { linkTarget } from "@/components/sections/shared/social-icons";
-import { STUDIO_COFOUNDER } from "@/lib/data";
+import { STUDIO_COFOUNDER, STUDIO_COFOUNDER_URL } from "@/lib/data";
 import { format, useData, useT } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
@@ -29,7 +29,11 @@ export function Startups() {
   const t = useT();
   const { startups, profile } = useData();
   const startup = startups[0];
-  const founders = [profile.name, STUDIO_COFOUNDER];
+  // Each founder's name leads to their own portfolio: this page for Asadbek, an external site for Miraziz.
+  const founders = [
+    { name: profile.name, href: "#home", external: false },
+    { name: STUDIO_COFOUNDER, href: STUDIO_COFOUNDER_URL, external: true },
+  ];
 
   return (
     <section id="startups" aria-labelledby="startups-heading" className="py-14 sm:py-28">
@@ -68,21 +72,46 @@ export function Startups() {
                       {t.startups.foundersLabel}
                     </dt>
                     <dd className="mt-2.5">
-                      <ul className="flex flex-col items-start gap-2">
-                        {founders.map((name) => (
-                          <li
-                            key={name}
-                            className="inline-flex max-w-full min-w-0 items-center gap-2 rounded-pill border border-cream-50/15 bg-cream-50/5 py-1 pr-3.5 pl-1 text-sm font-medium"
-                          >
-                            <span
-                              aria-hidden="true"
-                              className="grid size-7 shrink-0 place-items-center rounded-full bg-cream-50 font-heading text-[13px] font-semibold text-accent"
-                            >
-                              {name.charAt(0)}
-                            </span>
-                            <span className="truncate">{name}</span>
-                          </li>
-                        ))}
+                      <ul className="flex flex-wrap items-center gap-3">
+                        {founders.map(({ name, href, external }) => {
+                          const chip =
+                            "group/founder inline-flex min-h-12 max-w-full min-w-0 items-center gap-3 rounded-pill border border-cream-50/15 bg-cream-50/5 py-1.5 pr-5 pl-1.5 text-base font-medium sm:text-lg";
+                          const body = (
+                            <>
+                              <span
+                                aria-hidden="true"
+                                className="grid size-9 shrink-0 place-items-center rounded-full bg-cream-50 font-heading text-base font-semibold text-accent"
+                              >
+                                {name.charAt(0)}
+                              </span>
+                              <span className="truncate">{name}</span>
+                            </>
+                          );
+                          return (
+                            <li key={name} className="max-w-full min-w-0">
+                              {href ? (
+                                <a
+                                  href={href}
+                                  {...(external ? { target: "_blank", rel: "noopener" } : {})}
+                                  className={cn(
+                                    chip,
+                                    "transition-[background-color,border-color,scale] duration-300 ease-ios hover:border-cream-50/40 hover:bg-cream-50/15 active:scale-[0.97]",
+                                    focusRing,
+                                    "focus-visible:ring-cream-50 focus-visible:ring-offset-accent"
+                                  )}
+                                >
+                                  {body}
+                                  <ArrowUpRight
+                                    aria-hidden="true"
+                                    className="size-4 shrink-0 text-cream-50/60 transition-transform duration-300 ease-ios group-hover/founder:translate-x-0.5 group-hover/founder:-translate-y-0.5 motion-reduce:transition-none"
+                                  />
+                                </a>
+                              ) : (
+                                <span className={chip}>{body}</span>
+                              )}
+                            </li>
+                          );
+                        })}
                       </ul>
                     </dd>
                   </dl>

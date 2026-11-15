@@ -1,8 +1,9 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Inter_Tight } from "next/font/google";
+import { Geist, Inter_Tight, Oswald } from "next/font/google";
 import { notFound } from "next/navigation";
 
 import { DotPattern } from "@/components/ui/dot-pattern";
+import { LogoMark } from "@/components/ui/logo";
 import { isLocale, localeMeta, locales } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { getSeo, languageAlternates, localeUrl } from "@/lib/seo";
@@ -25,6 +26,16 @@ const interTight = Inter_Tight({
   variable: "--font-inter-tight",
   subsets: ["latin", "cyrillic"],
   weight: ["500", "600", "700"],
+  display: "swap",
+});
+
+/**
+ * Condensed poster face for the hero (`font-display`): the headline and the stat numerals.
+ * Variable weight (200 to 700), so one file per subset.
+ */
+const oswald = Oswald({
+  variable: "--font-oswald",
+  subsets: ["latin", "cyrillic"],
   display: "swap",
 });
 
@@ -86,7 +97,7 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[la
   return (
     <html
       lang={localeMeta[lang].htmlLang}
-      className={`${geistSans.variable} ${interTight.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${interTight.variable} ${oswald.variable} h-full antialiased`}
     >
       <body className="relative isolate min-h-full bg-cream font-sans text-ink antialiased">
         {/* Site-wide dotted background: fixed behind everything (body is the stacking context). */}
@@ -99,6 +110,8 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[la
             cr={1}
             className="fill-ink/20 md:fill-ink/20 [mask-image:radial-gradient(ellipse_120%_100%_at_50%_40%,black_55%,transparent_100%)]"
           />
+          {/* Brand "//" mark as a faint watermark, bleeding off the right edge. */}
+          <LogoMark className="absolute top-1/2 -right-[12vw] h-[78vh] w-auto -translate-y-1/2 text-accent/[0.05] sm:-right-[6vw] sm:h-[88vh]" />
         </div>
         {children}
       </body>

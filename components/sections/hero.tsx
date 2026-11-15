@@ -4,70 +4,82 @@ import { useRef } from "react";
 import { motion } from "framer-motion";
 
 import { useLoaderDone } from "@/components/sections/header/loader-signal";
-import {
-  FeaturedStatCard,
-  IntroCard,
-  NowBuildingCard,
-  StackCard,
-  StatCard,
-} from "@/components/sections/hero/cards";
-import { heroCopy } from "@/components/sections/hero/copy";
+import { Headline } from "@/components/sections/hero/headline";
+import { Actions, Greeting, HeroBackdrop, Location, Rise } from "@/components/sections/hero/parts";
 import { useHeroScrollFx } from "@/components/sections/hero/scroll-fx";
-import { useData, useLocale } from "@/lib/i18n";
+import { useData, useLocale, useT } from "@/lib/i18n";
 import { stagger } from "@/lib/motion";
 
 /**
- * Bento hero, no photo. Five kinds of opaque cards on the dotted page background:
+ * Opening screen, not one more section: one viewport high, with a single centered
+ * block in it.
  *
- *   <640   2 cols:  intro 2 | years 2 | internships 1 + startup 1 | now building 2 | stack 2
- *   640+   6 cols:  intro 6 | years 2 + internships 2 + startup 2 | now building 6 | stack 6
- *   1024+  12 cols: intro 8 (two rows) next to years 4 over internships 2 + startup 2,
- *                   then now building 5 + stack 7. Row 1 is `1fr`, so the years card
- *                   takes the spare height and the two small stats stay content-high.
+ *   (fixed header)
  *
- * The two small stats share one drift value, so they stay level while scrolling.
+ *              greeting                    logo chip and name
+ *          GIANT HEADLINE                  the one focal element, in the display face (`font-display`)
+ *           two actions
+ *            location                      tiny tracked capitals
  *
- * Motion: Framer staggers the cards in once the loader is done, GSAP reveals the
- * headline word by word and scrubs a small parallax on the card wrappers (640px+).
+ * No photo and no card surfaces: everything sits on the dotted page background.
+ * Scale contrast does the work: the headline is a condensed poster face (Oswald)
+ * at about three times a section heading, everything around it is small.
+ *
+ * Phones: the section is one screen high up to 36rem, so on tall phones the block
+ * does not float in empty space; the bottom padding keeps it clear of the floating
+ * tab bar.
+ *
+ * Motion: one moment on load, the headline words landing crooked and snapping
+ * straight (GSAP, see `headline.tsx`); the rest just fades up around it (Framer,
+ * top to bottom, gated on the loader). GSAP also scrubs a small parallax on the
+ * `data-drift` wrappers (640px+).
  */
 export function Hero() {
   const ready = useLoaderDone();
   const scope = useRef<HTMLElement>(null);
+  const t = useT();
   const { locale } = useLocale();
-  const { stats } = useData();
-  const [years, internships, startup] = stats;
+  const { profile } = useData();
 
   useHeroScrollFx(scope);
 
   return (
-    <section ref={scope} id="home" aria-labelledby="home-heading" className="relative pt-24 pb-14 sm:pt-32 sm:pb-16">
-      <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
-        {/* GSAP owns this wrapper (fade and scale on scroll); Framer owns the grid inside. */}
-        <div data-hero-grid>
-          <motion.div
-            className="grid grid-cols-2 gap-3 sm:grid-cols-6 sm:gap-4 lg:grid-cols-12 lg:grid-rows-[1fr_auto_auto]"
-            variants={stagger(0.08, 0.05)}
-            initial="hidden"
-            animate={ready ? "show" : "hidden"}
-          >
-            <IntroCard ready={ready} drift={-10} className="col-span-2 sm:col-span-6 lg:col-span-8 lg:row-span-2" />
+    <section
+      ref={scope}
+      id="home"
+      aria-labelledby="home-heading"
+      className="relative flex min-h-[min(100svh,36rem)] flex-col overflow-x-clip pt-[4.5rem] pb-24 sm:min-h-svh sm:pt-24 md:pb-12"
+    >
+      <HeroBackdrop />
 
-            <div
-              role="group"
-              aria-label={heroCopy[locale].statsAria}
-              className="col-span-2 grid grid-cols-subgrid gap-y-3 sm:col-span-6 sm:gap-y-4 lg:col-span-4 lg:row-span-2 lg:grid-rows-subgrid"
-            >
-              {years ? (
-                <FeaturedStatCard stat={years} ready={ready} drift={-24} className="col-span-2 lg:col-span-4" />
-              ) : null}
-              {internships ? <StatCard stat={internships} ready={ready} drift={-18} className="sm:col-span-2" /> : null}
-              {startup ? <StatCard stat={startup} ready={ready} drift={-18} className="sm:col-span-2" /> : null}
+      {/* GSAP owns this wrapper and the `data-drift` ones (scroll); Framer owns the nodes inside them. */}
+      <div data-hero-content className="relative flex w-full flex-1 flex-col px-4 sm:px-6 lg:px-10">
+        <motion.div
+          className="flex flex-1 flex-col text-center"
+          variants={stagger(0.09, 0.05)}
+          initial="hidden"
+          animate={ready ? "show" : "hidden"}
+        >
+          <div className="flex flex-1 flex-col items-center justify-center py-4 sm:py-6">
+            <div data-drift={-26} className="w-full">
+              <Rise>
+                <Greeting />
+              </Rise>
+              <Rise className="mt-4 sm:mt-6 lg:mt-[clamp(1rem,3vh,2rem)]">
+                <Headline key={locale} name={profile.name} words={t.hero.headline} play={ready} />
+              </Rise>
             </div>
 
-            <NowBuildingCard drift={14} className="col-span-2 sm:col-span-6 lg:col-span-5" />
-            <StackCard drift={24} className="col-span-2 sm:col-span-6 lg:col-span-7" />
-          </motion.div>
-        </div>
+            <div data-drift={-12} className="mt-5 w-full sm:mt-8 lg:mt-[clamp(1.25rem,3.6vh,2.5rem)]">
+              <Rise>
+                <Actions />
+              </Rise>
+              <Rise className="mt-5 sm:mt-7 lg:mt-[clamp(1.25rem,3.4vh,2.25rem)]">
+                <Location />
+              </Rise>
+            </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   );

@@ -6,7 +6,7 @@ import { LiveStage } from "@/components/sections/process-parts/live-stage";
 import { WireStage } from "@/components/sections/process-parts/wire-stage";
 import type { Dictionary } from "@/lib/i18n";
 
-/** Progress of one stretch of the scrubber, clamped to 0..1. */
+/** Progress of one stretch of the 0..3 progress, clamped to 0..1. */
 function useSpan(progress: MotionValue<number>, from: number, to: number) {
   return useTransform(progress, [from, to], [0, 1], { clamp: true });
 }

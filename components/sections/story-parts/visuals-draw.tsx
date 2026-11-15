@@ -3,6 +3,7 @@
 import { motion, type Variants } from "framer-motion";
 import { rise } from "@/components/sections/story-parts/scene";
 import { ease } from "@/lib/motion";
+import { cn } from "@/lib/utils";
 
 const pop = (delay: number): Variants => ({
   hidden: { opacity: 0, scale: 0.4, transition: { duration: 0.2 } },
@@ -19,37 +20,42 @@ const stroke = (delay: number, duration = 0.9): Variants => ({
   show: { pathLength: 1, opacity: 1, transition: { duration, ease, delay } },
 });
 
-const commits = [0, 1, 2, 3, 4];
-
-/** Chapter 2: a commit history that ends on the first real role. */
-export function CommitsVisual({ from, to }: { from: string; to: string }) {
+/** Chapter 2: a commit history, one labelled step per commit, ending on the first real role. */
+export function CommitsVisual({ steps }: { steps: readonly string[] }) {
+  const lastIndex = steps.length - 1;
   return (
     <div className="w-full max-w-sm">
       <div className="relative flex h-6 items-center justify-between">
         <motion.span variants={grow(0.4, 1.4)} className="absolute inset-x-1 h-px origin-left bg-cream-50/30" />
-        {commits.map((i) => {
-          const last = i === commits.length - 1;
-          return (
-            <motion.span
-              key={i}
-              variants={pop(0.5 + i * 0.28)}
-              className={
-                last
-                  ? "relative size-4 rounded-full bg-sage ring-4 ring-sage/25"
-                  : "relative size-2.5 rounded-full border border-cream-50/50 bg-ink"
-              }
-            />
-          );
-        })}
+        {steps.map((step, i) => (
+          <motion.span
+            key={step}
+            variants={pop(0.5 + i * 0.3)}
+            className={
+              i === lastIndex
+                ? "relative size-4 rounded-full bg-sage ring-4 ring-sage/25"
+                : "relative size-2.5 rounded-full border border-cream-50/50 bg-ink"
+            }
+          />
+        ))}
       </div>
-      <div className="mt-3 flex justify-between text-[13px] font-medium sm:text-sm">
-        <motion.span variants={rise(0.5)} className="text-cream-50/55">
-          {from}
-        </motion.span>
-        <motion.span variants={rise(1.7)} className="text-sage">
-          {to}
-        </motion.span>
-      </div>
+      {/* Labels sit under their dots: the outer two hug the edges, the inner ones are centred. */}
+      <ol className="relative mt-3 h-5 text-[12px] font-medium sm:text-sm">
+        {steps.map((step, i) => (
+          <motion.li
+            key={step}
+            variants={rise(0.6 + i * 0.3)}
+            style={i === 0 ? { left: 0 } : i === lastIndex ? { right: 0 } : { left: `${(i / lastIndex) * 100}%` }}
+            className={cn(
+              "absolute top-0 whitespace-nowrap",
+              i !== 0 && i !== lastIndex && "-translate-x-1/2",
+              i === lastIndex ? "text-sage" : "text-cream-50/55"
+            )}
+          >
+            {step}
+          </motion.li>
+        ))}
+      </ol>
       <motion.p variants={rise(2)} className="mt-4 font-mono text-[12px] text-cream-50/55 sm:text-[13px]">
         <span className="text-sage">$</span> git commit -m &quot;Mars IT School&quot;
       </motion.p>

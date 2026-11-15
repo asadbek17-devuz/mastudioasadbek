@@ -27,12 +27,9 @@ export type SectionId = "home" | "about" | "journey" | "projects" | "stack" | "s
  * three dictionaries have its text. The English strings below stay as the fallback
  * for code that reads this file directly; localized UI should use `useData()`.
  */
-export type StatId = "years" | "internships" | "startups";
 export type HighlightId = "fullstack" | "linux" | "founder" | "teaching";
 export type ProjectSlug = "learnly" | "pulse-analytics" | "studio-site" | "devtrack" | "teamspace";
-export type StackCategoryId = "frontend" | "backend" | "tools" | "design";
-/** Stack items that are plain words rather than brand/tech names, so they get translated. */
-export type StackSkillId = "designSystems" | "prototyping" | "accessibility";
+export type StackCategoryId = "frontend" | "backend" | "tools";
 export type StartupSlug = "mastudio";
 export type JourneyId =
   | "student"
@@ -48,13 +45,6 @@ export interface Profile {
   role: string;
   location: string;
   tagline: string;
-}
-
-export interface Stat {
-  id: StatId;
-  value: number;
-  suffix?: string;
-  label: string;
 }
 
 export interface About {
@@ -80,14 +70,12 @@ export type SkillLevel = "Expert" | "Advanced" | "Comfortable" | "Learning";
 
 export interface StackItem {
   name: string;
-  /** Set for items whose name is translated (see `StackSkillId`). */
-  labelId?: StackSkillId;
   level?: SkillLevel;
 }
 
 export interface StackCategory {
   id: StackCategoryId;
-  title: "Frontend" | "Backend" | "Tools & DevOps" | "Design";
+  title: "Frontend" | "Backend" | "Tools & DevOps";
   description: string;
   items: StackItem[];
 }
@@ -133,6 +121,9 @@ export const STUDIO_URL = "https://mastudio.uz";
 /** Name of the friend Asadbek founded MA STUDIO with: the second entry of the "Founders" row. */
 export const STUDIO_COFOUNDER = "Miraziz";
 
+/** Miraziz's own portfolio. While empty, his name in the "Founders" row is plain text, not a link. */
+export const STUDIO_COFOUNDER_URL = "";
+
 const unsplash = (id: string) =>
   `https://images.unsplash.com/${id}?auto=format&fit=crop&w=1200&q=80`;
 
@@ -143,12 +134,6 @@ export const profile: Profile = {
   tagline:
     "I'm a full-stack developer with 3+ years of experience across the web and Linux. I studied at Mars IT School, interned there and at Navi Global, then co-founded the MA\u00A0STUDIO studio with a friend.",
 };
-
-export const stats: Stat[] = [
-  { id: "years", value: 3, suffix: "+", label: "Years of full-stack experience" },
-  { id: "internships", value: 2, label: "Internships: Mars IT School, Navi Global" },
-  { id: "startups", value: 1, label: "Startup co-founded: MA\u00A0STUDIO" },
-];
 
 export const about: About = {
   paragraphs: [
@@ -256,6 +241,7 @@ export const stack: StackCategory[] = [
     items: [
       { name: "Node.js", level: "Advanced" },
       { name: "NestJS", level: "Advanced" },
+      { name: "SQL", level: "Advanced" },
       { name: "PostgreSQL", level: "Advanced" },
       { name: "Prisma", level: "Advanced" },
       { name: "Redis", level: "Comfortable" },
@@ -272,17 +258,6 @@ export const stack: StackCategory[] = [
       { name: "Vercel", level: "Advanced" },
       { name: "GitHub Actions", level: "Comfortable" },
       { name: "Linux", level: "Advanced" },
-    ],
-  },
-  {
-    id: "design",
-    title: "Design",
-    description: "Enough design to make good calls on my own.",
-    items: [
-      { name: "Figma", level: "Advanced" },
-      { name: "Design systems", labelId: "designSystems", level: "Advanced" },
-      { name: "Prototyping", labelId: "prototyping", level: "Comfortable" },
-      { name: "Accessibility", labelId: "accessibility", level: "Comfortable" },
     ],
   },
 ];
@@ -354,7 +329,7 @@ export const journey: JourneyMilestone[] = [
   {
     id: "fullstack",
     year: "06",
-    title: "Full-stack & Linux developer",
+    title: "Full-stack developer",
     description: "3+ years of experience: I build web apps end to end and work on Linux.",
     icon: Terminal,
     tag: "Today",

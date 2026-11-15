@@ -33,11 +33,6 @@ export const en: Dictionary = {
     tagline:
       "I'm a full-stack developer with 3+ years of experience across the web and Linux. I studied at Mars IT School, interned there and at Navi Global, then co-founded the MA\u00A0STUDIO studio with a friend.",
   },
-  stats: {
-    years: "Years of full-stack experience",
-    internships: "Internships: Mars IT School, Navi Global",
-    startups: "Startup co-founded: MA\u00A0STUDIO",
-  },
   hero: {
     greetingBefore: "Hi, I'm ",
     greetingAfter: "",
@@ -48,7 +43,7 @@ export const en: Dictionary = {
       { text: "and" },
       { text: "co-founder" },
       { text: "of" },
-      { text: "MA\u00A0STUDIO.", accent: true },
+      { text: "MA\u00A0studio.", accent: true },
     ],
     viewProjects: "View projects",
     studioSite: "MA\u00A0STUDIO website",
@@ -140,7 +135,7 @@ export const en: Dictionary = {
         tag: "Teaching",
       },
       fullstack: {
-        title: "Full-stack & Linux developer",
+        title: "Full-stack developer",
         description: "3+ years of experience: I build web apps end to end and work on Linux.",
         tag: "Today",
       },
@@ -239,15 +234,6 @@ export const en: Dictionary = {
         title: "Tools & DevOps",
         description: "Shipping often without breaking things.",
       },
-      design: {
-        title: "Design",
-        description: "Enough design to make good calls on my own.",
-      },
-    },
-    skills: {
-      designSystems: "Design systems",
-      prototyping: "Prototyping",
-      accessibility: "Accessibility",
     },
   },
   startups: {
@@ -278,26 +264,23 @@ export const en: Dictionary = {
       eyebrow: "How I build",
       title: "From idea",
       accent: "to product",
-      description: "Drag the handle and watch one screen go from a paper sketch to a shipped product.",
+      description: "One screen, four steps: from a paper sketch to a launched product.",
     },
-    sliderAria: "Product stage",
-    stagesAria: "Jump to a stage",
-    frameAria: "Illustration: the same product screen shown at the selected stage",
     stages: {
       idea: {
-        title: "Idea",
+        title: "Sketch",
         text: "I start on paper: who it is for, the one job it must do, and the smallest version worth shipping.",
       },
       wireframe: {
-        title: "Wireframe",
-        text: "Structure before style: grey boxes settle the layout, flow and content while changes are still cheap.",
+        title: "Design",
+        text: "The sketch becomes a clear layout: structure, flow and content are settled while changes are still cheap.",
       },
       code: {
         title: "Code",
         text: "I build it from typed, reusable components, with real data and a live preview from day one.",
       },
       live: {
-        title: "Live",
+        title: "Launch",
         text: "It ships fast, accessible and measured, then keeps improving with what real users do.",
       },
     },
@@ -361,15 +344,15 @@ export const en: Dictionary = {
       },
       today: {
         eyebrow: "Today",
-        title: "Full-stack and",
-        accent: "Linux developer.",
+        title: "Full-stack developer",
+        accent: "and co-founder.",
         line: "3+ years of experience. And the road goes on.",
       },
     },
     visual: {
       hello: "Hello",
       student: "student",
-      intern: "intern",
+      steps: ["study", "internship", "developer", "MA\u00A0STUDIO"],
       mentor: "mentor",
       chips: ["Full-stack", "Linux", "3+ years"],
     },

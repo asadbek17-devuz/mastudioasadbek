@@ -39,8 +39,8 @@ export default async function Page({ params }: PageProps<"/[lang]">) {
         <About />
         <Journey />
         <Projects />
-        <Process />
         <Stack />
+        <Process />
         <Startups />
       </main>
       <Footer />

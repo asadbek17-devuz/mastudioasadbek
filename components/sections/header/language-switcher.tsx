@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useId, useRef, useState, type KeyboardEvent, type MouseEvent } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 import { Check, ChevronDown, Globe } from "lucide-react";
 
 import { localeMeta, switcherOrder, useLocale, useT, type Locale } from "@/lib/i18n";

@@ -4,7 +4,6 @@ import {
   AnimatePresence,
   motion,
   useMotionValue,
-  useReducedMotion,
   useSpring,
   useTransform,
   type MotionValue,
@@ -25,6 +24,7 @@ import { gsap, useScrollFx } from "@/components/sections/shared/scroll-fx";
 import { linkTarget } from "@/components/sections/shared/social-icons";
 import { format, useT, type LocalizedProject } from "@/lib/i18n";
 import { ease } from "@/lib/motion";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 import { cn } from "@/lib/utils";
 import { addressOf, BrowserFrame, pad } from "./browser-frame";
 

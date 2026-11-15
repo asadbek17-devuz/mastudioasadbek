@@ -5,9 +5,7 @@ import type {
   SectionId,
   SkillLevel,
   StackCategoryId,
-  StackSkillId,
   StartupSlug,
-  StatId,
 } from "@/lib/data";
 
 /** Props of `<SectionHeading>`: the accent phrase is always rendered right after the title. */
@@ -20,7 +18,7 @@ export interface HeadingText {
 
 export interface HeadlineWord {
   text: string;
-  /** Highlighted in accent green with the marker underline. */
+  /** Highlighted in accent green (the brand wordmark in the hero headline). */
   accent?: boolean;
 }
 
@@ -60,7 +58,6 @@ export interface Dictionary {
     location: string;
     tagline: string;
   };
-  stats: Record<StatId, string>;
   hero: {
     /** Text around the name: "<greetingBefore><name><greetingAfter>". */
     greetingBefore: string;
@@ -131,7 +128,6 @@ export interface Dictionary {
     };
     levels: Record<SkillLevel, string>;
     categories: Record<StackCategoryId, { title: string; description: string }>;
-    skills: Record<StackSkillId, string>;
   };
   startups: {
     heading: HeadingText;
@@ -144,15 +140,10 @@ export interface Dictionary {
     factsLabel: string;
     facts: Record<"webApps" | "products" | "mvp", { title: string; text: string }>;
   };
-  /** "From idea to product": the interactive stage scrubber. */
+  /** "From idea to product": one screen that goes from sketch to launch as the visitor scrolls. */
   process: {
     heading: HeadingText;
-    /** Accessible name of the slider; its value is read as the stage title. */
-    sliderAria: string;
-    /** Accessible name of the group of stage buttons. */
-    stagesAria: string;
-    /** Describes the (decorative) product screen inside the browser frame. */
-    frameAria: string;
+    /** The four steps, in order: sketch, design, code, launch. */
     stages: Record<"idea" | "wireframe" | "code" | "live", { title: string; text: string }>;
     /** Text inside the mock product screen. */
     mock: {
@@ -186,7 +177,8 @@ export interface Dictionary {
     visual: {
       hello: string;
       student: string;
-      intern: string;
+      /** Chapter 2 timeline, first step to last. */
+      steps: [string, string, string, string];
       mentor: string;
       chips: [string, string, string];
     };

@@ -116,7 +116,7 @@ export function buildJsonLd(locale: Locale, t: Dictionary) {
   const url = localeUrl(locale);
   const inLanguage = localeMeta[locale].htmlLang;
   const image = `${url}/opengraph-image`;
-  const tools = stack.flatMap((category) => category.items.filter((item) => !item.labelId).map((item) => item.name));
+  const tools = stack.flatMap((category) => category.items.map((item) => item.name));
 
   const studio = {
     "@type": "Organization",

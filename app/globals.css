@@ -49,6 +49,8 @@
 @theme inline {
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-heading: var(--font-inter-tight), var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  /* Hero display face (Oswald): `font-display`, the headline and the stat numerals. */
+  --font-display: var(--font-oswald), var(--font-inter-tight), ui-sans-serif, system-ui, sans-serif;
 
   /* shadcn semantic colors, mapped to cream values (see :root below).
      Note: `accent` and `muted` are the brand tokens above, not shadcn's. */
@@ -148,17 +150,3 @@
   animation: loader-failsafe-hide 0.3s linear 5s forwards;
 }
 
-/*
- * Accent highlight: a sage marker (45%) under accent words (headings, hero). Sage reads
- * clearly on cream, where the paler accent-soft almost disappeared.
- * Animate `background-size` from `0% 0.32em` to `100% 0.32em` to draw it in.
- */
-@utility accent-mark {
-  --accent-mark: color-mix(in srgb, var(--color-sage) 45%, transparent);
-  background-image: linear-gradient(var(--accent-mark), var(--accent-mark));
-  background-repeat: no-repeat;
-  background-position: 0 88%;
-  background-size: 100% 0.32em;
-  -webkit-box-decoration-break: clone;
-  box-decoration-break: clone;
-}

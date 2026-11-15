@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion, type Variants } from "framer-motion";
+import { AnimatePresence, motion, type Variants } from "framer-motion";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 
 import { LogoMark } from "@/components/ui/logo";
 import { isLoaderDone, markLoaderDone } from "@/components/sections/header/loader-signal";

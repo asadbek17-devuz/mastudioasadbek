@@ -35,12 +35,7 @@ export const uz: Dictionary = {
     role: "Full-stack dasturchi, MA\u00A0STUDIO co-founder",
     location: "Toshkent, Oʻzbekiston",
     tagline:
-      "3 yildan ortiq tajribaga ega full-stack va Linux dasturchiman. Mars IT Schoolda oʻqidim, oʻsha yerda va Navi Globalda amaliyot oʻtadim, soʻng doʻstim bilan birga MA\u00A0STUDIO studiyasiga asos soldik.",
-  },
-  stats: {
-    years: "Yillik full-stack tajriba",
-    internships: "Amaliyot: Mars IT School va Navi Global",
-    startups: "Startap co-founderi: MA\u00A0STUDIO",
+      "3 yildan ortiq tajribaga ega full-stack dasturchiman, Linux muhitida ishlayman. Mars IT Schoolda oʻqidim, oʻsha yerda va Navi Globalda amaliyot oʻtadim, soʻng doʻstim bilan birga MA\u00A0STUDIO studiyasiga asos soldik.",
   },
   hero: {
     greetingBefore: "Salom, men ",
@@ -50,7 +45,7 @@ export const uz: Dictionary = {
       { text: "software" },
       { text: "engineer" },
       { text: "va" },
-      { text: "MA\u00A0STUDIO", accent: true },
+      { text: "MA\u00A0studio", accent: true },
       { text: "co-founder." },
     ],
     viewProjects: "Loyihalar",
@@ -79,7 +74,7 @@ export const uz: Dictionary = {
         description: "Terminal va serverlarda bemalol ishlayman.",
       },
       founder: {
-        title: "Hammuassis",
+        title: "Co-founder",
         description: "MA\u00A0STUDIO\u00A0ga doʻstim bilan birga asos solganmiz va uni birga rivojlantiryapmiz.",
       },
       teaching: {
@@ -135,7 +130,7 @@ export const uz: Dictionary = {
         title: "MA\u00A0STUDIO\u00A0ga asos soldik",
         description:
           "Doʻstim bilan birga oʻz startapimizni boshladik: veb-ilovalar, raqamli mahsulotlar va MVP yaratadigan studiya.",
-        tag: "Hammuassis",
+        tag: "Co-founder",
       },
       teaching: {
         title: "Dars berish tajribasi",
@@ -144,7 +139,7 @@ export const uz: Dictionary = {
         tag: "Ustozlik",
       },
       fullstack: {
-        title: "Full-stack va Linux dasturchi",
+        title: "Full-stack dasturchi",
         description:
           "3 yildan ortiq tajriba: veb-ilovalarni boshidan oxirigacha quraman va Linux muhitida ishlayman.",
         tag: "Bugun",
@@ -245,15 +240,6 @@ export const uz: Dictionary = {
         title: "Vositalar va DevOps",
         description: "Hech narsani buzmasdan tez-tez reliz qilish.",
       },
-      design: {
-        title: "Dizayn",
-        description: "Mustaqil toʻgʻri qaror qabul qilish uchun yetarli dizayn bilimi.",
-      },
-    },
-    skills: {
-      designSystems: "Dizayn tizimlari",
-      prototyping: "Prototiplash",
-      accessibility: "Accessibility",
     },
   },
   startups: {
@@ -266,7 +252,7 @@ export const uz: Dictionary = {
     visit: "{name} sayti",
     items: {
       mastudio: {
-        role: "Hammuassis va bosh dasturchi",
+        role: "Co-founder va bosh dasturchi",
         description:
           "Doʻstim Miraziz bilan birga asos solgan dasturiy studiyamiz. Veb-ilovalar, raqamli mahsulotlar va MVPlarni ilk gʻoyadan ishga tushirishgacha loyihalab, yaratamiz.",
       },
@@ -284,26 +270,23 @@ export const uz: Dictionary = {
       eyebrow: "Qanday ishlayman",
       title: "Gʻoyadan",
       accent: "mahsulotgacha",
-      description: "Tutqichni suring va bitta ekran qogʻozdagi chizmadan tayyor mahsulotga qanday aylanishini koʻring.",
+      description: "Bitta ekran, toʻrt bosqich: qogʻozdagi eskizdan ishga tushgan mahsulotgacha.",
     },
-    sliderAria: "Mahsulot bosqichi",
-    stagesAria: "Bosqichga oʻtish",
-    frameAria: "Rasm: bitta mahsulot ekrani tanlangan bosqichda koʻrsatilgan",
     stages: {
       idea: {
-        title: "Gʻoya",
+        title: "Eskiz",
         text: "Qogʻozdan boshlayman: mahsulot kim uchun, qaysi bitta vazifani hal qiladi va eng kichik foydali versiyasi qanday.",
       },
       wireframe: {
-        title: "Karkas",
-        text: "Avval tuzilma, keyin bezak: kulrang bloklar bilan joylashuv, oqim va kontentni oʻzgartirish hali arzon paytda hal qilaman.",
+        title: "Dizayn",
+        text: "Eskiz aniq maketga aylanadi: tuzilma, oqim va kontentni oʻzgartirish hali arzon paytda hal qilaman.",
       },
       code: {
         title: "Kod",
         text: "Tipli, qayta ishlatiladigan komponentlardan quraman: birinchi kundan haqiqiy maʼlumot va jonli koʻrinish bilan.",
       },
       live: {
-        title: "Jonli",
+        title: "Ishga tushirish",
         text: "Mahsulot tez, qulay va oʻlchanadigan holda ishga tushadi, keyin haqiqiy foydalanuvchilarga qarab yaxshilanib boradi.",
       },
     },
@@ -367,15 +350,15 @@ export const uz: Dictionary = {
       },
       today: {
         eyebrow: "Bugun",
-        title: "Full-stack va",
-        accent: "Linux dasturchi.",
+        title: "Full-stack dasturchi",
+        accent: "va co-founder.",
         line: "3 yildan ortiq tajriba. Yoʻl esa davom etmoqda.",
       },
     },
     visual: {
       hello: "Salom",
       student: "oʻquvchi",
-      intern: "amaliyotchi",
+      steps: ["oʻqish", "amaliyot", "dasturchi", "MA\u00A0STUDIO"],
       mentor: "ustoz",
       chips: ["Full-stack", "Linux", "3+ yil"],
     },

@@ -1,11 +1,11 @@
 "use client";
 
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 import {
   CodeXml,
   Layers,
   MousePointer2,
-  Palette,
   Pointer,
   RotateCcw,
   Server,
@@ -30,7 +30,6 @@ const categoryIcon: Record<StackCategoryId, LucideIcon> = {
   frontend: CodeXml,
   backend: Server,
   tools: Wrench,
-  design: Palette,
 };
 
 /** Solid fills only: pills overlap while they fly, so nothing may be see-through. */
@@ -49,11 +48,6 @@ const tone: Record<StackCategoryId, { fill: string; outline: string; swatch: str
     fill: "bg-accent-2 text-cream-50",
     outline: "border-accent-2 text-accent-2",
     swatch: "bg-accent-2",
-  },
-  design: {
-    fill: "bg-[color-mix(in_srgb,var(--color-sage)_60%,var(--color-cream-50))] text-ink",
-    outline: "border-sage text-ink",
-    swatch: "bg-[color-mix(in_srgb,var(--color-sage)_60%,var(--color-cream-50))]",
   },
 };
 

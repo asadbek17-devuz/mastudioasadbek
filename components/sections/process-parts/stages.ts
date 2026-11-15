@@ -1,4 +1,4 @@
-/** The four stages of the scrubber, in order. Text comes from `t.process.stages[id]`. */
+/** The four stages, in order. Text comes from `t.process.stages[id]`. */
 export const stageIds = ["idea", "wireframe", "code", "live"] as const;
 export type StageId = (typeof stageIds)[number];
 

@@ -35,5 +35,4 @@ export {
   type LocalizedProject,
   type LocalizedStackCategory,
   type LocalizedStartup,
-  type LocalizedStat,
 } from "./use-data";

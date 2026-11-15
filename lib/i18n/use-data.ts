@@ -19,8 +19,6 @@ export function getData(t: Dictionary) {
   return {
     profile: { ...base.profile, ...t.profile },
 
-    stats: base.stats.map((stat) => ({ ...stat, label: t.stats[stat.id] })),
-
     about: {
       paragraphs: t.about.paragraphs,
       highlights: base.about.highlights.map((h) => ({ ...h, ...t.about.highlights[h.id] })),
@@ -35,7 +33,6 @@ export function getData(t: Dictionary) {
       description: t.stack.categories[category.id].description,
       items: category.items.map((item) => ({
         ...item,
-        name: item.labelId ? t.stack.skills[item.labelId] : item.name,
         levelLabel: item.level ? t.stack.levels[item.level] : undefined,
       })),
     })),
@@ -57,7 +54,6 @@ export function getData(t: Dictionary) {
 
 export type LocalizedData = ReturnType<typeof getData>;
 export type LocalizedProfile = LocalizedData["profile"];
-export type LocalizedStat = LocalizedData["stats"][number];
 export type LocalizedProject = LocalizedData["projects"][number];
 export type LocalizedStackCategory = LocalizedData["stack"][number];
 export type LocalizedStartup = LocalizedData["startups"][number];
@@ -66,7 +62,7 @@ export type LocalizedNavItem = LocalizedData["navItems"][number];
 
 /**
  * Localized content for the current locale, memoized per dictionary:
- * `const { profile, stats, about, projects, stack, startups, journey, navItems } = useData();`
+ * `const { profile, about, projects, stack, startups, journey, navItems } = useData();`
  */
 export function useData(): LocalizedData {
   const t = useT();

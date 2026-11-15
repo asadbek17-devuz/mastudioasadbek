@@ -28,9 +28,10 @@ export const fadeUp: Variants = {
 /** Plain fade (used as the reduced-motion fallback). */
 export const fadeIn: Variants = {
   hidden: { opacity: 0 },
-  // Also reset y: SSR may render with fadeUp's hidden state before
-  // useReducedMotion resolves, and those styles must not stick.
-  show: { opacity: 1, y: 0, transition: { duration: 0.4, ease } },
+  // Also reset x/y: the server and the hydration render use an offset hidden state (the
+  // reduced-motion preference is only known after hydration), and that offset must not
+  // stick. It is dropped at once, while the element is still transparent, so nothing slides.
+  show: { opacity: 1, x: 0, y: 0, transition: { duration: 0.4, ease, x: { duration: 0 }, y: { duration: 0 } } },
 };
 
 /** Container variants that stagger children using `hidden` / `show`. */

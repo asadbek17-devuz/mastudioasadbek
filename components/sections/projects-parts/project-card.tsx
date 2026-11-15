@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 import Image from "next/image";
 import { Reveal } from "@/components/ui/reveal";
 import { ArrowButton, cardStatic, cardSurface, focusRing } from "@/components/sections/shared/hover";

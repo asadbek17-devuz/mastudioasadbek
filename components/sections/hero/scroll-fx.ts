@@ -6,11 +6,11 @@ import { useGSAP } from "@gsap/react";
 import { gsap } from "@/components/sections/shared/scroll-fx";
 
 /**
- * Scrubbed parallax for the bento hero (640px and up, motion allowed).
+ * Scrubbed parallax for the hero (640px and up, motion allowed).
  *
  * - every `[data-drift="<px>"]` wrapper slides by that many px (negative = up)
- *   while the hero scrolls out, so the cards move a little against each other;
- * - `[data-hero-grid]` fades and shrinks slightly over the last 45%.
+ *   while the hero scrolls out, so the parts move a little against each other;
+ * - `[data-hero-content]` fades and shrinks slightly over the last 45%.
  *
  * Everything starts from the resting layout (progress 0 at the top of the page),
  * and GSAP only touches these wrappers, never the Framer Motion nodes inside.
@@ -40,7 +40,7 @@ export function useHeroScrollFx(scope: RefObject<HTMLElement | null>) {
         });
 
         timeline.fromTo(
-          "[data-hero-grid]",
+          "[data-hero-content]",
           { opacity: 1, scale: 1 },
           { opacity: 0.55, scale: 0.975, duration: 0.45, transformOrigin: "50% 0%" },
           0.55

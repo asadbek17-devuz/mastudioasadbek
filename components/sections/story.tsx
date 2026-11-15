@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 import type { ReactNode } from "react";
 import { pad } from "@/components/sections/projects-parts/browser-frame";
 import {
@@ -49,7 +50,7 @@ export function Story() {
       case "start":
         return <StartVisual active={active} reduce={reduce} hello={s.visual.hello} />;
       case "marsIntern":
-        return <CommitsVisual from={s.visual.student} to={s.visual.intern} />;
+        return <CommitsVisual steps={s.visual.steps} />;
       case "navi":
         return <NaviVisual active={active} reduce={reduce} />;
       case "studio":

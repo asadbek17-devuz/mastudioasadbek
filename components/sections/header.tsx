@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type MouseEvent } from "react";
-import { LayoutGroup, motion, useReducedMotion } from "framer-motion";
+import { LayoutGroup, motion } from "framer-motion";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 import { ArrowUpRight } from "lucide-react";
 
 import { useLoaderDone } from "@/components/sections/header/loader-signal";
@@ -61,6 +62,17 @@ const enterSpring = { ...spring, stiffness: 300, damping: 30 };
 /** Keep the last content clear of the mobile tab bar (the footer lives in another file). */
 // 64px bar + 12px offset from the screen edge + 16px of air above the bar.
 const bottomBarSpacer = `@media (max-width: 767px){body{padding-bottom:calc(92px + env(safe-area-inset-bottom))}}`;
+
+/**
+ * Writes the section into the address bar without adding a history entry. The first
+ * section is the bare page address (no `#home`), so the top of the page has a clean URL.
+ */
+function syncHash(id: SectionId): void {
+  const hash = id === sectionIds[0] ? "" : `#${id}`;
+  if (window.location.hash === hash) return;
+  const { pathname, search } = window.location;
+  window.history.replaceState(window.history.state, "", `${pathname}${search}${hash}`);
+}
 
 function useScrollSpy() {
   const [active, setActive] = useState<SectionId>(sectionIds[0] ?? "home");
@@ -220,14 +232,34 @@ export function Header() {
       if (!goTo(id, !reduce)) return;
 
       event.preventDefault();
-      if (window.location.hash !== `#${id}`) {
-        window.history.replaceState(window.history.state, "", `#${id}`);
-      }
+      syncHash(id);
     },
     [goTo, reduce],
   );
 
+  // Deep link (/uz#stack). The browser's own jump is a smooth scroll (page-wide
+  // `scroll-behavior`) that starts before hydration and is cancelled by the first
+  // ScrollTrigger refresh, which strands the page near the top. So jump there directly,
+  // and once more when the loader lifts, in case fonts or images moved the section since.
+  useEffect(() => {
+    const id = window.location.hash.slice(1) as SectionId;
+    if (id !== sectionIds[0] && sectionIds.includes(id)) goTo(id, false);
+  }, [goTo, ready]);
+
+  // Keep the address in step with the section on screen, however the visitor got there
+  // (wheel, keyboard, the footer's "back to top"). Only a change of section writes, so
+  // mounting never wipes the hash of a deep link.
+  const synced = useRef(active);
+  useEffect(() => {
+    if (synced.current === active) return;
+    synced.current = active;
+    syncHash(active);
+  }, [active]);
+
   const pillTransition = reduce ? { duration: 0 } : pillSpring;
+  // Reduced motion is only known after hydration, so the bars may have been rendered with
+  // the offset start state: the fade then drops that offset at once instead of sliding.
+  const fade = { duration: 0.3, y: { duration: 0 }, scale: { duration: 0 } };
   const enter = (from: number) => ({
     initial: reduce ? { opacity: 0 } : { opacity: 0, y: from, scale: 0.98 },
     animate: ready
@@ -245,7 +277,7 @@ export function Header() {
       <header className="pointer-events-none fixed inset-x-0 top-3 z-50 flex justify-center px-3 sm:top-4">
         <motion.div
           {...enter(-24)}
-          transition={reduce ? { duration: 0.3 } : { ...enterSpring, delay: 0.15 }}
+          transition={reduce ? fade : { ...enterSpring, delay: 0.15 }}
           data-compact={compact}
           className={cn(
             // Every item is `--item` tall. Phones: 44px (touch target), a 58px pill. From md at
@@ -385,7 +417,7 @@ export function Header() {
         <motion.nav
           aria-label={t.nav.primaryAria}
           {...enter(32)}
-          transition={reduce ? { duration: 0.3 } : { ...enterSpring, delay: 0.25 }}
+          transition={reduce ? fade : { ...enterSpring, delay: 0.25 }}
           className="pointer-events-auto w-[calc(100vw-24px)] max-w-md rounded-pill border border-line bg-cream-50/85 p-1.5 shadow-lift backdrop-blur-md backdrop-saturate-150"
         >
           <LayoutGroup id="primary-nav-bottom">

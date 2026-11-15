@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion, type Variants } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 import { cardSurface } from "@/components/sections/shared/hover";
 import { snapItem } from "@/components/sections/shared/snap-carousel";
 import type { JourneyMilestone } from "@/lib/data";

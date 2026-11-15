@@ -33,11 +33,6 @@ export const ru: Dictionary = {
     tagline:
       "Full-stack разработчик с опытом более трёх лет: веб и Linux. Учился в Mars IT School, стажировался там же и в Navi Global, а потом вместе с другом основал студию MA\u00A0STUDIO.",
   },
-  stats: {
-    years: "Года в full-stack разработке",
-    internships: "Стажировки: Mars IT School и Navi Global",
-    startups: "Стартап с другом — MA\u00A0STUDIO",
-  },
   hero: {
     greetingBefore: "Привет, я ",
     greetingAfter: "",
@@ -47,7 +42,7 @@ export const ru: Dictionary = {
       { text: "engineer" },
       { text: "и" },
       { text: "сооснователь" },
-      { text: "MA\u00A0STUDIO.", accent: true },
+      { text: "MA\u00A0studio.", accent: true },
     ],
     viewProjects: "Проекты",
     studioSite: "Сайт MA\u00A0STUDIO",
@@ -140,7 +135,7 @@ export const ru: Dictionary = {
         tag: "Преподавание",
       },
       fullstack: {
-        title: "Full-stack и Linux-разработчик",
+        title: "Full-stack разработчик",
         description:
           "Больше трёх лет опыта: делаю веб-приложения от начала до конца и работаю в Linux.",
         tag: "Сегодня",
@@ -241,15 +236,6 @@ export const ru: Dictionary = {
         title: "Инструменты и DevOps",
         description: "Частые релизы без поломок.",
       },
-      design: {
-        title: "Дизайн",
-        description: "Достаточно дизайна, чтобы самому принимать верные решения.",
-      },
-    },
-    skills: {
-      designSystems: "Дизайн-системы",
-      prototyping: "Прототипирование",
-      accessibility: "Доступность",
     },
   },
   startups: {
@@ -280,19 +266,16 @@ export const ru: Dictionary = {
       eyebrow: "Как я работаю",
       title: "От идеи",
       accent: "до продукта",
-      description: "Потяните ползунок и посмотрите, как один экран проходит путь от наброска на бумаге до готового продукта.",
+      description: "Один экран, четыре шага: от наброска на бумаге до запущенного продукта.",
     },
-    sliderAria: "Этап продукта",
-    stagesAria: "Перейти к этапу",
-    frameAria: "Иллюстрация: один и тот же экран продукта на выбранном этапе",
     stages: {
       idea: {
-        title: "Идея",
+        title: "Набросок",
         text: "Начинаю на бумаге: для кого продукт, какую одну задачу он решает и какая минимальная версия уже полезна.",
       },
       wireframe: {
-        title: "Каркас",
-        text: "Сначала структура, потом стиль: серые блоки помогают решить раскладку, сценарий и контент, пока правки ещё дёшевы.",
+        title: "Дизайн",
+        text: "Набросок превращается в понятный макет: структуру, сценарий и контент решаю, пока правки ещё дёшевы.",
       },
       code: {
         title: "Код",
@@ -363,15 +346,15 @@ export const ru: Dictionary = {
       },
       today: {
         eyebrow: "Сегодня",
-        title: "Full-stack и",
-        accent: "Linux-разработчик.",
+        title: "Full-stack разработчик",
+        accent: "и сооснователь.",
         line: "Более 3 лет опыта. И путь продолжается.",
       },
     },
     visual: {
       hello: "Привет",
       student: "ученик",
-      intern: "стажёр",
+      steps: ["учёба", "стажировка", "работа", "MA\u00A0STUDIO"],
       mentor: "наставник",
       chips: ["Full-stack", "Linux", "3+ года"],
     },
