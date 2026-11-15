@@ -25,7 +25,7 @@ import { stagger } from "@/lib/motion";
  * Scale contrast does the work: the headline is a condensed poster face (Oswald)
  * at about three times a section heading, everything around it is small.
  *
- * Phones: the section is one screen high up to 36rem, so on tall phones the block
+ * Phones: the section is one screen high up to 40rem, with extra top padding so the block sits lower, so on tall phones the block
  * does not float in empty space; the bottom padding keeps it clear of the floating
  * tab bar.
  *
@@ -48,7 +48,7 @@ export function Hero() {
       ref={scope}
       id="home"
       aria-labelledby="home-heading"
-      className="relative flex min-h-[min(100svh,36rem)] flex-col overflow-x-clip pt-[4.5rem] pb-24 sm:min-h-svh sm:pt-24 md:pb-12"
+      className="relative flex min-h-[min(100svh,40rem)] flex-col overflow-x-clip pt-28 pb-24 sm:min-h-svh sm:pt-24 md:pb-12"
     >
       <HeroBackdrop />
 
